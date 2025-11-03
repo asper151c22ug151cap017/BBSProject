@@ -1,0 +1,126 @@
+﻿// ==============================================================================
+// Project Name : BusBookingSystem
+// File Name    : BusController.cs
+// Created By   : Kaviraj M
+// Created On   : 19/09/2025
+// Modified By  : Kaviraj M
+// Modified On  : 28/10/2025
+// Description  : Handles all bus-related operations in the Bus Booking System,
+//                including adding, updating, deleting, and retrieving buses.
+// ==============================================================================
+
+
+using BusBookingSystem.Application;
+using BusBookingSystem.Application.BusDtos;
+using BusBookingSystem.Infrastructure.RepositoryImplementation;
+using BusBookingSystem.Infrastructure.RepositoryInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BusBookingSystem.API.Controllers
+{
+    /// <summary>
+    /// Provides endpoints for managing buses in the Bus Booking System.
+    /// Supports operations to create, update, delete, and retrieve bus information.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BusController : ControllerBase
+    {
+        private readonly IBBSBus _bBSBus;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BusController"/> class.
+        /// </summary>
+        /// <param name="bbsBus">The bus repository interface.</param>
+        public BusController (IBBSBus bBSBus)
+        {
+            _bBSBus = bBSBus;
+        }
+
+
+        // --------------------------------------------------------------------
+        // ✅ GET ALL BUSES
+        // --------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves all available buses from the system.
+        /// </summary>
+        /// <returns>Returns a list of all buses.</returns>
+        [HttpGet]
+        [Route("GetAllBuses")]
+        [AllowAnonymous]
+         
+        public IActionResult GetAllBuses()
+        {
+            return Ok(_bBSBus.GetAllbuses());
+        }
+
+        // --------------------------------------------------------------------
+        // ✅ ADD BUS
+        // --------------------------------------------------------------------
+        /// <summary>
+        /// Adds a new bus record to the system.
+        /// </summary>
+        /// <param name="addBuses">The DTO containing bus details.</param>
+        /// <returns>Status message indicating success or failure.</returns>
+        [HttpPost]
+        [Route("AddBus")]
+        [Authorize]
+        public IActionResult AddBus(RequestAddBuses addBuses)
+        {
+            return Ok(_bBSBus.AddBuses(addBuses));
+        }
+
+        // --------------------------------------------------------------------
+        // ✅ UPDATE BUS
+        // --------------------------------------------------------------------
+        /// <summary>
+        /// Updates existing bus information such as name, type, or route assignment.
+        /// </summary>
+        /// <param name="updateBuses">The DTO containing updated bus information.</param>
+        /// <returns>Status message indicating update result.</returns>
+        [HttpPut]
+        [Route("UpdateBus")]
+        [Authorize]
+
+        public IActionResult UpdateBus(RequestUpdateBuses updateBuses)
+        {
+            return Ok (_bBSBus.UpdateBuses(updateBuses));
+        }
+
+
+        // --------------------------------------------------------------------
+        // ✅ DELETE BUS
+        // --------------------------------------------------------------------
+        /// <summary>
+        /// Marks a bus as deleted (soft delete) using its unique identifier.
+        /// </summary>
+        /// <param name="busId">The unique identifier of the bus.</param>
+        /// <returns>Status message indicating deletion result.</returns>
+        [HttpDelete]
+        [Route("DeleteBus")]
+        [Authorize]
+        public IActionResult DeleteBus( [FromQuery]int busId)
+        {
+            return Ok(_bBSBus.DeleteBuses(busId));
+        }
+
+        // --------------------------------------------------------------------
+        // ✅ GET BUS COUNT
+        // --------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves the total number of buses in the system.
+        /// </summary>
+        /// <returns>Total count of buses.</returns>
+        [HttpGet]
+        [Route("GetBusescount")]
+        public IActionResult GetBusescount()
+        {
+            return Ok(_bBSBus.GetBusesCount());
+        }
+
+
+
+    }
+}

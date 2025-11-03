@@ -1,0 +1,142 @@
+/* 🌌 Background Gradient */
+.landing-bg {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* 🌠 Hero Section */
+.simple-hero {
+    position: relative;
+    min-height: 100vh;
+    background-image: url('../assets/Images/landing_bgimg.avif');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.simple-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 30, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+/* ✨ Card with Glow and Depth */
+.hero-minicard {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 20px rgba(255, 255, 255, 0.05);
+    transform: translateY(50px) scale(0.95);
+    opacity: 0;
+    animation: popIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 🔮 Smooth Text/Element Fade-In Cascade */
+.brand-kicker, .hero-minicard h1, .hero-minicard p, .hero-minicard ul, .hero-minicard .d-flex {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+    animation: riseIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.brand-kicker { animation-delay: 0.3s; }
+.hero-minicard h1 { animation-delay: 0.5s; }
+.hero-minicard p { animation-delay: 0.7s; }
+.hero-minicard ul { animation-delay: 0.9s; }
+.hero-minicard .d-flex { animation-delay: 1.1s; }
+
+/* 🌀 New Animation Keyframes */
+@keyframes popIn {
+    0% {
+        transform: translateY(80px) scale(0.9) rotateX(10deg);
+        opacity: 0;
+        filter: blur(5px);
+    }
+    100% {
+        transform: translateY(0) scale(1) rotateX(0);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes riseIn {
+    0% {
+        transform: translateY(30px) scale(0.98);
+        opacity: 0;
+        filter: blur(3px);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* 🧩 Scroll Fold Section (3D Flip Upgrade) */
+.fold-section {
+    transform-origin: top;
+    transform: rotateX(75deg) translateY(50px);
+    opacity: 0;
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.9s ease;
+    will-change: transform, opacity;
+}
+
+.fold-section.visible {
+    transform: rotateX(0deg) translateY(0);
+    opacity: 1;
+}
+
+/* 🌍 Depth Perspective */
+body {
+    perspective: 1800px;
+    overflow-x: hidden;
+}
+
+/* 🚌 Floating Buses - Modern Parallax Glow */
+.floating-buses {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-bus {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.08);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+    animation: floaty 7s ease-in-out infinite;
+}
+
+.bus-1 { top: 20%; left: 12%; animation-delay: 0s; font-size: 2.5rem; }
+.bus-2 { top: 65%; right: 18%; animation-delay: 2s; font-size: 2rem; }
+.bus-3 { top: 45%; left: 75%; animation-delay: 4s; font-size: 2.3rem; }
+
+@keyframes floaty {
+    0%, 100% {
+        transform: translateY(0px) translateX(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-18px) translateX(5px) rotate(2deg);
+        opacity: 1;
+    }
+}
+.simple-hero {
+    position: relative;
+    min-height: 100vh;
+    background-image: url('../assets/Images/landing_bgimg.avif');  /* 👈 THIS LINE */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}

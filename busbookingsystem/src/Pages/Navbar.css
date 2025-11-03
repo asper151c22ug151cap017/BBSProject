@@ -1,0 +1,72 @@
+.BBSnavbar {
+  background: linear-gradient(90deg, #f5f5f5, #ffffff);
+  height: 70px;
+  width: 100%;
+  z-index: 1030;
+}
+
+/* Nav link base style */
+/* Style for all nav links */
+.BBSnavbar .nav-link {
+  position: relative;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.BBSnavbar .dropdown-toggle{
+ 
+  position: relative;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Underline effect */
+.BBSnavbar .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;        /* place at the bottom of the link */
+  left: 0;
+  width: 0;         /* hidden by default */
+  height: 2px;      /* underline thickness */
+  background-color: #dc3545; /* bootstrap red, matches your theme */
+  transition: width 0.3s ease-in-out;
+}
+.no-caret .dropdown-toggle::after {
+  display: none !important;
+}
+.BBSnavbar .dropdown-toggle::after{
+    content: "";
+  position: absolute;
+  bottom: 0;      
+  left: 0;
+  width: 0;        
+  height: 2px;    
+  background-color: #dc3545; 
+  transition: width 0.3s ease-in-out;
+}
+/* On hover: show underline left → right */
+.BBSnavbar .dropdown-toggle:hover::after {
+  width: 100%;
+}
+.BBSnavbar .dropdown-toggle:hover {
+  color: #dc3545 !important;
+}
+
+
+/* On hover: show underline left → right */
+.BBSnavbar .nav-link:hover::after {
+  width: 100%;
+}
+
+/* Optional: change text color on hover */
+.BBSnavbar .nav-link:hover {
+  color: #dc3545 !important;
+}
+/* Make sure modal centers properly on all screens */
+/* Custom Offcanvas width */
+.offcanvas.offcanvas-end {
+  width: 15% !important;   /* Change width to 15% of screen */
+  max-width: 100% !important; /* Prevent overflow */
+}

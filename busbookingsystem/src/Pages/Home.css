@@ -1,0 +1,177 @@
+/* Hero section with background image */
+.hero-section {
+  background-image: url('../assets/Images/searchbg.jpg'); /* Place your bus image in public/images */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+}
+.searchheadh1{
+  margin-top: 40px;
+}
+.searchheadp{
+  margin-top: 20px;
+}
+/* Dark overlay for readability */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+   z-index: 1;
+}
+
+/* Ensure container is above overlay */
+.hero-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Search card */
+.search-card {
+  background-color: rgba(255, 255, 255, 0.9); /* semi-transparent */
+  border-radius: 12px;
+  margin-top: 80px;
+  
+}
+
+/* Red Bus Card Design */
+.bus-card {
+  background: linear-gradient(135deg, #efefef, #fefefe);
+  border-radius: 15px;
+  padding: 20px;
+color: black;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bus-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Bus icon watermark */
+.bus-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  opacity: 0.2;
+  font-size: 60px;
+}
+
+.bus-card h5, 
+.bus-card p {
+  z-index: 1;
+  position: relative;
+}
+
+/* Why Us Section */
+.why-us {
+  background: linear-gradient(90deg, #dc3545, #ff6b6b);
+}
+.bus-card {
+  background-color: white;
+  border: 2px solid rgb(194, 22, 22);
+  border-radius: 12px;
+  border-style: solid;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bus-card h5{
+  color: rgb(226, 93, 135);
+}
+
+.select-div button{
+  border: 1px #dc3545;
+  border-style: solid;
+  background-color: #f3ebeb;
+  color: black;
+  padding-left: 30px;
+  padding-right: 30px;
+  text-align: center;
+
+}
+.select-div button:hover {
+  background-color: #dc3545; 
+  color: #fff; 
+  cursor: pointer;
+  box-shadow: 2px gray;
+  
+}
+.card-head{
+ color: rgb(101, 53, 53);
+
+}
+.cardhead-div{
+  width: 400px;
+  height: 40px;
+  margin-bottom: 10px;
+
+margin-left: 10px;
+text-align: start;
+}
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #fefefe, #faf8fa);
+  color: #b71c1c; /* dark red text */
+  font-weight: bold;
+  padding: 8px 0;
+  border-radius: 6px;
+}
+
+.marquee-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 15s linear infinite;
+}
+
+ @keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+} 
+/* Hero entrance animation */
+.hero-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: heroFadeIn 1s forwards;
+}
+
+@keyframes heroFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll triggered animation */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+} 
+
+ .scroll-animate.animate-slideUp {
+  opacity: 1;
+  transform: translateY(0);
+} 
+
+.offcanvas.show {
+  z-index: 2000 !important;
+  position: fixed;
+}

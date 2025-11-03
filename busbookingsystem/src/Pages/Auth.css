@@ -1,0 +1,99 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+
+/* Left side image with overlay */
+.auth-bg {
+  position: relative;
+  background: url('../assets/Images/image-login-bg.jpg') center/cover no-repeat;
+  height: 400px;
+  width: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  animation: floatUpDown 6s ease-in-out infinite;
+}
+
+.auth-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+ 
+}
+
+/* Login Card - glassmorphism */
+.login_card, .signup_card {
+  border-radius: 20px;
+  width: 26rem;
+  padding: 2rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+   animation: smoothFadeInUp 1.5s cubic-bezier(0.50, 0.3, 0.50, 1.5) forwards;
+}
+
+.login_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4);
+}
+
+/* Animations */
+@keyframes floatUpDown {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .auth-container {
+    flex-direction: row-reverse;
+    align-items: center;
+    text-align: center;
+  }
+
+  .auth-bg {
+    width: 100%;
+    max-width: 350px;
+    height: 120px;
+    margin-bottom: 1px;
+  }
+
+  .login_card {
+    width: 100%;
+    max-width: 350px;
+   
+  }
+}
+@keyframes smoothFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px); /* starts lower */
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-5px); /* slight overshoot for smoothness */
+  }
+  80%{
+    opacity: 1;
+    transform: translateY(-2.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* settle into place */
+  }
+}
