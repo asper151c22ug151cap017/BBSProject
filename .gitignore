@@ -1,0 +1,17 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/ProjectSRC/BusBookingSystem.API/.vs
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.API/bin/Debug/net8.0
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.API/obj
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.API/wwwroot/Logs
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Application/bin/Debug/net8.0
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Application/obj
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Domain/bin/Debug/net8.0
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Domain/obj
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Infrastructure/bin/Debug/net8.0
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Infrastructure/obj
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Services/bin/Debug/net8.0
+/ProjectSRC/BusBookingSystem.API/BusBookingSystem.Services/obj
