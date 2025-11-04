@@ -47,9 +47,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetBusesById")]
         [AllowAnonymous]
-        public IActionResult GetBusesById([FromQuery] int busId)
+        public async Task<IActionResult> GetBusesById([FromQuery] int busId)
         {
-            return Ok(_confirmBooking.GetBus(busId));
+            var buses = await _confirmBooking.GetBus(busId); // ✅ await added
+            return Ok(buses); // ✅ now it returns actual data, not Task
         }
 
         // --------------------------------------------------------------------
