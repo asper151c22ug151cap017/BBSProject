@@ -39,7 +39,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A list of <see cref="BusDto"/> objects containing bus information.
         /// </returns>
-        List<BusDto> GetBus(int busId);
+       Task< List<BusDto>> GetBus(int busId);
 
         // --------------------------------------------------------------------
         // ✅ ADD PASSENGERS

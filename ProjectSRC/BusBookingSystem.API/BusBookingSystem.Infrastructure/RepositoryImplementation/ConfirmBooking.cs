@@ -210,9 +210,6 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             }
         }
 
-
-
-
         // --------------------------------------------------------------------
         // ✅ GET BUS BY ID
         // --------------------------------------------------------------------
@@ -221,11 +218,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="busId">Unique Bus ID.</param>
         /// <returns>List of bus DTOs with route details.</returns>
-        public List<BusDto> GetBus(int busId)
+        public async Task<List<BusDto>> GetBus(int busId)
         {
             try
             {
-                return _dbBbsContext.Tblbuses
+                return await _dbBbsContext.Tblbuses
                     .Include(b => b.Tblroutes)
                     .Where(b => b.BusId == busId)
                     .Select(b => new BusDto
@@ -240,7 +237,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                             Source = r.Source,
                             Destination = r.Destination
                         }).ToList()
-                    }).ToList();
+                    }).ToListAsync ();
             }
             catch (Exception ex)
             {
@@ -248,7 +245,6 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 throw;
             }
         }
-      
 
 
         // --------------------------------------------------------------------
@@ -324,54 +320,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             }
         }
 
-        // --------------------------------------------------------------------
-        // ✅ DOWNLOAD TICKETS
-        // --------------------------------------------------------------------
-        /// <summary>
-        /// Retrieves ticket information for a given booking ID.
-        /// </summary>
-        /// <param name="Bookingid">Booking ID.</param>
-        /// <returns>List of downloadable ticket DTOs.</returns>
-        public List<ResponseDownloadtickets> DownloadTickets(int Bookingid)
-        {
 
-            try
-            {
-                var booking = _dbBbsContext.Tblbookings
-                    .Include(x => x.User)
-                    .Include(x => x.Bus)
-                    .Include(x => x.Route)
-                    .Include(x => x.Tblbookingseats).ThenInclude(x => x.Seat)
-                    .Where(x => x.BookingId == Bookingid)
-                    .ToList();
-
-                List<ResponseDownloadtickets> responseDownloadtickets = [];
-                foreach (var book in booking)
-                {
-                    var downloadbookings = _mapper.Map<ResponseDownloadtickets>(book);
-                    downloadbookings.DownloadUserinfo= _mapper.Map<downloadUserinfo>(book.User);
-                    downloadbookings.Busesdto = _mapper.Map<Downloadbusdto>(book.Bus);
-                    downloadbookings.RoutesDto = _mapper.Map<DownloadRoutesDto>(book.Route);
-                    downloadbookings.SeatNumber = book.Tblbookingseats.Select(bs=> bs.Seat.SeatNumber).ToList();
-                    downloadbookings.passangers = _mapper.Map<List< Passangerinfo>>(book.Tblpassengers);
-
-
-                    responseDownloadtickets.Add(downloadbookings);
-
-                }
-
-                if (booking == null)
-                    return null;
-
-                return responseDownloadtickets;
-            }
-
-            catch (Exception ex)
-            {
-                _errorHandler.Capture(ex, $"Error downloading ticket for booking: {Bookingid}");
-                throw;
-            }
-        }
         // --------------------------------------------------------------------
         // ✅ CANCEL BOOKING
         // --------------------------------------------------------------------
@@ -415,6 +364,56 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 _errorHandler.Capture(ex, $"Error cancelling booking: {bookingId}");
                 throw;
             }
+        }
+
+
+        // --------------------------------------------------------------------
+        // ✅ DOWNLOAD TICKETS
+        // --------------------------------------------------------------------
+        /// <summary>
+        /// Retrieves ticket information for a given booking ID.
+        /// </summary>
+        /// <param name="Bookingid">Booking ID.</param>
+        /// <returns>List of downloadable ticket DTOs.</returns>
+        public List<ResponseDownloadtickets> DownloadTickets(int Bookingid)
+        {
+            try
+            {
+                var booking = _dbBbsContext.Tblbookings
+                    .Include(x => x.User)
+                    .Include(x => x.Bus)
+                    .Include(x => x.Route)
+                    .Include(x => x.Tblbookingseats).ThenInclude(x => x.Seat)
+                    .Where(x => x.BookingId == Bookingid)
+                    .ToList();
+
+                List<ResponseDownloadtickets> responseDownloadtickets = [];
+                foreach (var book in booking)
+                {
+                    var downloadbookings = _mapper.Map<ResponseDownloadtickets>(book);
+                    downloadbookings.DownloadUserinfo = _mapper.Map<downloadUserinfo>(book.User);
+                    downloadbookings.Busesdto = _mapper.Map<Downloadbusdto>(book.Bus);
+                    downloadbookings.RoutesDto = _mapper.Map<DownloadRoutesDto>(book.Route);
+                    downloadbookings.SeatNumber = book.Tblbookingseats.Select(bs => bs.Seat.SeatNumber).ToList();
+                    downloadbookings.passangers = _mapper.Map<List<Passangerinfo>>(book.Tblpassengers);
+
+
+                    responseDownloadtickets.Add(downloadbookings);
+
+                }
+
+                if (booking == null)
+                    return null;
+
+                return responseDownloadtickets;
+            }
+
+            catch (Exception ex)
+            {
+                _errorHandler.Capture(ex, $"Error downloading ticket for booking: {Bookingid}");
+                throw;
+            }
+        
         }
     }
 }
