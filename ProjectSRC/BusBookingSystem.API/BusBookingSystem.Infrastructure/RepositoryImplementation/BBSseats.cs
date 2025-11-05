@@ -128,6 +128,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             try
             {
                 return _dbBbsContext.Tblseats.Include(x=>x.Bus)
+                    .AsNoTracking()
                     .Select(x => new ResponseGetSeats
                     {
 

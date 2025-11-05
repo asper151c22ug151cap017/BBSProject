@@ -56,7 +56,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         {
             try
             {
-                return _dbContext.Tblusers
+                return _dbContext.Tblusers.AsNoTracking()
                     .Select(x => new ResponseGetusersDto
                     {
                         UserId = x.UserId,

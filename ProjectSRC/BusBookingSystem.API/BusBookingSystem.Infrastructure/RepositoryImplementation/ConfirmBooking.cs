@@ -225,6 +225,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 return await _dbBbsContext.Tblbuses
                     .Include(b => b.Tblroutes)
                     .Where(b => b.BusId == busId)
+                    .AsNoTracking()
                     .Select(b => new BusDto
                     {
                         BusId = b.BusId,

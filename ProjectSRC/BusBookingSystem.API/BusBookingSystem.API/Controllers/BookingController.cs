@@ -51,9 +51,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("Getallbookings")]
 
-        public IActionResult Getallbookings()
+        public async Task<IActionResult> Getallbookings()
         {
-         return Ok(_bBSbooking.Getallbookings());
+           var getbookings = await _bBSbooking.GetAllBookingsAsync();
+            return Ok(getbookings);
         }
 
         // --------------------------------------------------------------------
@@ -64,11 +65,12 @@ namespace BusBookingSystem.API.Controllers
         /// </summary>
         [HttpGet]
         [Route ("Getbokingcounts")]
+        [AllowAnonymous]
 
-
-        public IActionResult Getbookingcount()
+        public async Task< IActionResult> Getbookingcount()
         {
-            return Ok(_bBSbooking.Getcountbookings());
+          var bookingcount = await _bBSbooking.GetCountBookingsAsync();
+            return Ok(bookingcount);
 
         }
 
@@ -83,9 +85,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("AddBooking")]
         [Authorize]
-        public IActionResult AddBooking(RequestAddbookings addBooking)
+        public async Task<IActionResult> AddBooking(RequestAddbookings addBooking)
         {
-            return Ok(_bBSbooking.AddBooking(addBooking));
+            var addbooking = await _bBSbooking.AddBookingAsync(addBooking);
+            return Ok(addbooking);
         }
 
         // --------------------------------------------------------------------
@@ -101,9 +104,10 @@ namespace BusBookingSystem.API.Controllers
         [Route("UpdateBus")]
         [Authorize]
 
-        public IActionResult UpdateBus(Requestupdatebooking updateBooking)
+        public async Task<IActionResult> UpdateBus(Requestupdatebooking updateBooking)
         {
-            return Ok(_bBSbooking.UpdateBooking(updateBooking));
+            var updatebookings = await _bBSbooking.UpdateBookingAsync(updateBooking);
+            return Ok(updatebookings);
         }
 
 
@@ -118,9 +122,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpDelete]
         [Route("DeleteBus")]
         [Authorize]
-        public IActionResult DeleteBus(int Bookingid)
+        public async Task<IActionResult> DeleteBus(int Bookingid)
         {
-            return Ok(_bBSbooking.DeleteBooking(Bookingid));
+            var deletbooking = await _bBSbooking.DeleteBookingAsync(Bookingid);
+            return Ok(deletbooking);
         }
 
         // --------------------------------------------------------------------
@@ -133,9 +138,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("Getrecentbookings")]
 
-        public IActionResult Getrecentbookings()
+        public async Task<IActionResult> Getrecentbookings()
         {
-            return Ok(_bBSbooking.Getrecentbookings());
+            var bookingcount = await _bBSbooking.GetCountBookingsAsync();
+            return Ok(bookingcount);
         }
     }
 }
