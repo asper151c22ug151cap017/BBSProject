@@ -30,6 +30,7 @@ namespace BusBookingSystem.API.Controllers
         // 🔹 Private Field
         // --------------------------------------------------------------------
         private readonly IBBSUser _bbsUser;
+        private readonly ErrorHandler _errorHandler;
 
         // --------------------------------------------------------------------
         // 🔹 Constructor
@@ -38,9 +39,10 @@ namespace BusBookingSystem.API.Controllers
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
         /// <param name="bbsUser">Repository interface for user management.</param>
-        public UserController(IBBSUser bbsUser)
+        public UserController(IBBSUser bbsUser, ErrorHandler errorHandler)
         {
             _bbsUser = bbsUser;
+            _errorHandler = errorHandler;
         }
 
         // --------------------------------------------------------------------
@@ -55,7 +57,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllUsers()
         {
-            return Ok(await _bbsUser.Getusers());
+            try
+            {
+                return Ok(await _bbsUser.Getusers()); 
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching all users");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -71,8 +84,20 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AddUser([FromBody] RequestAdduser addUser)
         {
-            addUser.Password = BBSHashCode.HashcodePassword(addUser.Password);
-            return Ok(await _bbsUser.AddUsers(addUser));
+            try
+
+            {
+                addUser.Password = BBSHashCode.HashcodePassword(addUser.Password);
+                return Ok(await _bbsUser.AddUsers(addUser));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error Adding Userinformation");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -88,7 +113,18 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> UpdateUser([FromBody] RequestUpdateUser updateUserInfo)
         {
-            return Ok(await _bbsUser.UpdateUser(updateUserInfo));
+            try
+            {
+                return Ok(await _bbsUser.UpdateUser(updateUserInfo));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error Update Userinformation ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -104,7 +140,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteUser([FromQuery] int userId)
         {
-            return Ok(await _bbsUser.DeleteUser(userId));
+            try
+            {
+                return Ok(await _bbsUser.DeleteUser(userId));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error Delete user information ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -118,7 +165,20 @@ namespace BusBookingSystem.API.Controllers
         [Route("GetUserCount")]
         public async Task<IActionResult> GetUserCount()
         {
-            return Ok(await _bbsUser.GetUserCount());
+            try
+            {
+                return Ok(await _bbsUser.GetUserCount());
+
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching User counts ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
+
         }
 
         // --------------------------------------------------------------------
@@ -133,19 +193,43 @@ namespace BusBookingSystem.API.Controllers
         [Route("GetUserById")]
         public async Task<IActionResult> GetUserById([FromQuery] int userId)
         {
-            return Ok(await _bbsUser.GetUserbyId(userId));
+            try
+            {
+                return Ok(await _bbsUser.GetUserbyId(userId));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, $"Error fetching User information by :{userId}");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
+
         }
 
         [HttpPut]
         [Route("UpdateUserProfile")]
         public async Task<IActionResult> UpdateUserProfile([FromBody] RequestUserUpdateDto updateUserProfile)
         {
-            if (updateUserProfile == null)
-                return BadRequest("Invalid user data.");
+            try
+            {
+                if (updateUserProfile == null)
+                    return BadRequest("Invalid user data.");
 
-            var result = await _bbsUser.UpdateUserprofileAsync(updateUserProfile);
+                var result = await _bbsUser.UpdateUserprofileAsync(updateUserProfile);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error update user profile information by user");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
+
         }
 
     }

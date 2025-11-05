@@ -133,7 +133,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     {
 
                        SeatNumber = x.SeatNumber,
-                     
+                     SeatId = x.SeatId,
                        BusId=x.Bus.BusId
                     }).ToListAsync();
             }

@@ -10,6 +10,7 @@
 //                downloading tickets, and canceling bookings.
 // ============================================================================
 
+using BusBookingSystem.Application;
 using BusBookingSystem.Application.BookingDtos;
 using BusBookingSystem.Infrastructure.RepositoryInterface;
 using Microsoft.AspNetCore.Authorization;
@@ -26,14 +27,17 @@ namespace BusBookingSystem.API.Controllers
     public class ConfirmbookingController : ControllerBase
     {
         private readonly Iconfirmbooking _confirmBooking;
+        private readonly ErrorHandler _errorHandler;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfirmBookingController"/> class.
         /// </summary>
         /// <param name="confirmBooking">The repository interface for confirm booking operations.</param>
-        public ConfirmbookingController(Iconfirmbooking confirmBooking)
+        public ConfirmbookingController(Iconfirmbooking confirmBooking, ErrorHandler errorHandler)
         {
             _confirmBooking = confirmBooking;
+            _errorHandler = errorHandler;
         }
 
         // --------------------------------------------------------------------
@@ -49,8 +53,19 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetBusesById([FromQuery] int busId)
         {
-            var buses = await _confirmBooking.GetBus(busId); // ✅ await added
-            return Ok(buses); // ✅ now it returns actual data, not Task
+            try
+            {
+                var buses = await _confirmBooking.GetBus(busId); 
+                return Ok(buses); 
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, $"Error fetching Buses by :{busId}");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -66,9 +81,19 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> AddPassenger([FromBody] Addpassengers addpassengers)
         {
-            
-           var passangers = await _confirmBooking.AddPassengersAsync(addpassengers);
-            return Ok(passangers);
+            try
+            {
+                var passangers = await _confirmBooking.AddPassengersAsync(addpassengers);
+                return Ok(passangers);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While add passsangers");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -84,8 +109,20 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetBookingsByUserId([FromQuery] int userId)
         {
-            var passangers = await _confirmBooking.GetBookingsByUserIdAsync(userId);
-            return Ok(passangers);
+            try
+            {
+
+                var passangers = await _confirmBooking.GetBookingsByUserIdAsync(userId);
+                return Ok(passangers);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, $"Error fetching Bookings by:{userId} ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -101,8 +138,19 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> AddBooking([FromBody] Requestbookingdto addbookings)
         {
-            var bookings = await _confirmBooking.AddBookingAsync(addbookings);
-            return Ok(bookings);
+            try
+            {
+                var bookings = await _confirmBooking.AddBookingAsync(addbookings);
+                return Ok(bookings);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While add bookings ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -118,8 +166,19 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> DownloadTicket([FromQuery] int bookingId)
         {
-            var download = await _confirmBooking.DownloadTicketsAsync(bookingId);
-            return Ok(download);
+            try
+            {
+                var download = await _confirmBooking.DownloadTicketsAsync(bookingId);
+                return Ok(download);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error download booking tickes ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -135,8 +194,19 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> CancelBooking([FromQuery] int bookingId)
         {
-           var cancel = await _confirmBooking.CancelBookingAsync(bookingId);
-            return Ok(cancel);
+            try
+            {
+                var cancel = await _confirmBooking.CancelBookingAsync(bookingId);
+                return Ok(cancel);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error Cancell booked Tickets");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
     }
 }

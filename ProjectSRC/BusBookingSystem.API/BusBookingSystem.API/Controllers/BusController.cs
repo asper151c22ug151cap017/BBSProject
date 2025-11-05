@@ -29,14 +29,16 @@ namespace BusBookingSystem.API.Controllers
     public class BusController : ControllerBase
     {
         private readonly IBBSBus _bBSBus;
+        private readonly ErrorHandler _errorHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BusController"/> class.
         /// </summary>
         /// <param name="bbsBus">The bus repository interface.</param>
-        public BusController (IBBSBus bBSBus)
+        public BusController (IBBSBus bBSBus, ErrorHandler errorHandler)
         {
             _bBSBus = bBSBus;
+            _errorHandler = errorHandler;
         }
 
 
@@ -53,7 +55,19 @@ namespace BusBookingSystem.API.Controllers
 
         public async Task<IActionResult> GetAllBuses()
         {
-            return Ok(await _bBSBus.GetAllbuses());
+            try
+            {
+                return Ok(await _bBSBus.GetAllbuses());
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching all buses");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
+
         }
 
         // --------------------------------------------------------------------
@@ -69,7 +83,20 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> AddBus(RequestAddBuses addBuses)
         {
-            return Ok(await _bBSBus.AddBuses(addBuses));
+            try
+            {
+                return Ok(await _bBSBus.AddBuses(addBuses));
+
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error while adding Bus ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
+
         }
 
         // --------------------------------------------------------------------
@@ -86,7 +113,19 @@ namespace BusBookingSystem.API.Controllers
 
         public async Task<IActionResult> UpdateBus(RequestUpdateBuses updateBuses)
         {
-            return Ok (await _bBSBus.UpdateBuses(updateBuses));
+            try
+            {
+                return Ok (await _bBSBus.UpdateBuses(updateBuses));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While update bus informations");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
+
         }
 
 
@@ -103,7 +142,19 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteBus( [FromQuery]int busId)
         {
-            return Ok(await _bBSBus.DeleteBuses(busId));
+            try
+            { 
+                return Ok(await _bBSBus.DeleteBuses(busId));
+
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While Delete bus ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -117,7 +168,20 @@ namespace BusBookingSystem.API.Controllers
         [Route("GetBusescount")]
         public async Task<IActionResult> GetBusescount()
         {
-            return Ok(await _bBSBus.GetBusesCount());
+            try
+            {
+                return Ok(await _bBSBus.GetBusesCount());
+
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching buses counts ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
+
         }
 
 

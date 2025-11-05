@@ -9,6 +9,7 @@
 //                including creating, updating, deleting, and retrieving bookings.
 // =================================================================================
 
+using BusBookingSystem.Application;
 using BusBookingSystem.Application.BookingDtos;
 using BusBookingSystem.Application.BusDtos;
 using BusBookingSystem.Infrastructure.RepositoryImplementation;
@@ -30,14 +31,16 @@ namespace BusBookingSystem.API.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBBSbooking _bBSbooking;
+        private readonly ErrorHandler _errorHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BookingController"/> class
         /// with dependency injection for the booking repository.
         /// </summary>
-        public BookingController(IBBSbooking bBSbooking)
+        public BookingController(IBBSbooking bBSbooking, ErrorHandler errorHandler)
         {
             _bBSbooking = bBSbooking;
+            _errorHandler = errorHandler;
         }
 
 
@@ -53,8 +56,19 @@ namespace BusBookingSystem.API.Controllers
 
         public async Task<IActionResult> Getallbookings()
         {
-           var getbookings = await _bBSbooking.GetAllBookingsAsync();
-            return Ok(getbookings);
+            try
+            {
+                var getbookings = await _bBSbooking.GetAllBookingsAsync();
+                return Ok(getbookings);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching all bookings");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -69,8 +83,19 @@ namespace BusBookingSystem.API.Controllers
 
         public async Task< IActionResult> Getbookingcount()
         {
-          var bookingcount = await _bBSbooking.GetCountBookingsAsync();
-            return Ok(bookingcount);
+            try
+            {
+                var bookingcount = await _bBSbooking.GetCountBookingsAsync();
+                return Ok(bookingcount);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching bookings count");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
 
         }
 
@@ -87,8 +112,19 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> AddBooking(RequestAddbookings addBooking)
         {
-            var addbooking = await _bBSbooking.AddBookingAsync(addBooking);
-            return Ok(addbooking);
+            try
+           { 
+                var addbooking = await _bBSbooking.AddBookingAsync(addBooking);
+                return Ok(addbooking);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error while  Add  bookings");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -106,8 +142,19 @@ namespace BusBookingSystem.API.Controllers
 
         public async Task<IActionResult> UpdateBus(Requestupdatebooking updateBooking)
         {
-            var updatebookings = await _bBSbooking.UpdateBookingAsync(updateBooking);
-            return Ok(updatebookings);
+            try
+            {         
+                var updatebookings = await _bBSbooking.UpdateBookingAsync(updateBooking);
+                return Ok(updatebookings);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error while update bookings");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
 
@@ -124,8 +171,19 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteBus(int Bookingid)
         {
-            var deletbooking = await _bBSbooking.DeleteBookingAsync(Bookingid);
-            return Ok(deletbooking);
+            try
+           {
+                var deletbooking = await _bBSbooking.DeleteBookingAsync(Bookingid);
+                return Ok(deletbooking); 
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While Delete bookings");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -140,8 +198,19 @@ namespace BusBookingSystem.API.Controllers
 
         public async Task<IActionResult> Getrecentbookings()
         {
-            var recent = await _bBSbooking.GetRecentBookingsAsync();
-            return Ok(recent);
+            try
+            {
+                var recent = await _bBSbooking.GetRecentBookingsAsync();
+                return Ok(recent); 
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching Recent bookings");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
     }
 }

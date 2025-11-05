@@ -9,6 +9,7 @@
 //                retrieving seat availability, and fetching bus-specific seats.
 // ============================================================================
 
+using BusBookingSystem.Application;
 using BusBookingSystem.Application.SeatsDtos;
 using BusBookingSystem.Infrastructure.RepositoryInterface;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,8 @@ namespace BusBookingSystem.API.Controllers
         // 🔹 Private Field
         // --------------------------------------------------------------------
         private readonly IBBSSeats _bBsSeats;
+        private readonly ErrorHandler _errorHandler;
+
 
         // --------------------------------------------------------------------
         // 🔹 Constructor
@@ -36,9 +39,10 @@ namespace BusBookingSystem.API.Controllers
         /// Initializes a new instance of the <see cref="SeatsController"/> class.
         /// </summary>
         /// <param name="bBsSeats">Repository interface for seat management.</param>
-        public SeatsController(IBBSSeats bBsSeats)
+        public SeatsController(IBBSSeats bBsSeats, ErrorHandler errorHandler)
         {
             _bBsSeats = bBsSeats;
+            _errorHandler = errorHandler;
         }
 
         // --------------------------------------------------------------------
@@ -53,7 +57,18 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllSeats()
         {
-            return Ok(await _bBsSeats.GetAllSeats());
+            try
+            {
+                return Ok(await _bBsSeats.GetAllSeats());
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching all seats");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -69,7 +84,18 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetParticularBusSeats([FromQuery] int busId, DateTime travelDate)
         {
-            return Ok(await _bBsSeats.GetparthicularbusSeats(busId, travelDate));
+            try
+            {
+                return Ok(await _bBsSeats.GetparthicularbusSeats(busId, travelDate));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, $"Error fetching particular bus seats by:{busId}&& {travelDate} ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -85,12 +111,23 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> AddSeat([FromBody] RequestAddSeats addSeats)
         {
-            if (addSeats.SeatNumber.Length > 10)
+            try
             {
-                return BadRequest(new { Message = "Seat number cannot exceed 10 characters." });
-            }
+                if (addSeats.SeatNumber.Length > 10)
+                {
+                    return BadRequest(new { Message = "Seat number cannot exceed 10 characters." });
+                }
 
-            return Ok(await _bBsSeats.AddSeats(addSeats));
+                return Ok(await _bBsSeats.AddSeats(addSeats));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While add seats ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -106,7 +143,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateSeat([FromBody] RequestUpdateSeats updateSeatsInfo)
         {
-            return Ok(await _bBsSeats.UpdateSeats(updateSeatsInfo));
+            try
+            {
+                return Ok(await _bBsSeats.UpdateSeats(updateSeatsInfo));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While update seats");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -122,7 +170,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteSeat([FromQuery] int seatId)
         {
-            return Ok(await _bBsSeats.DeleteSeats(seatId));
+            try
+            {
+                return Ok(await _bBsSeats.DeleteSeats(seatId));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While Delete seats");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -139,10 +198,21 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAvailableSeats([FromQuery] int busId, [FromQuery] DateTime? date)
         {
-            if (date == null)
-                return BadRequest(new { Message = "Date is required to check seat availability." });
+            try
+            {
+                if (date == null)
+                    return BadRequest(new { Message = "Date is required to check seat availability." });
 
-            return Ok(await _bBsSeats.GetAvailableseats(busId, date.Value));
+                return Ok(await _bBsSeats.GetAvailableseats(busId, date.Value));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching available seats ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
     }
 }

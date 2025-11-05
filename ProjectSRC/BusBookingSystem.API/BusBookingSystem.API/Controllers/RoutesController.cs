@@ -9,6 +9,7 @@
 //                adding, updating, deleting, retrieving, and filtering routes.
 // ============================================================================
 
+using BusBookingSystem.Application;
 using BusBookingSystem.Application.RoutesDtos;
 using BusBookingSystem.Infrastructure.RepositoryInterface;
 using Microsoft.AspNetCore.Authorization;
@@ -25,14 +26,17 @@ namespace BusBookingSystem.API.Controllers
     public class RoutesController : ControllerBase
     {
         private readonly IBBSRoutes _bBSRoutes;
+        private readonly ErrorHandler _errorHandler;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoutesController"/> class.
         /// </summary>
         /// <param name="bBSRoutes">Repository interface for route management.</param>
-        public RoutesController(IBBSRoutes bBSRoutes)
+        public RoutesController(IBBSRoutes bBSRoutes, ErrorHandler errorHandler)
         {
             _bBSRoutes = bBSRoutes;
+            _errorHandler = errorHandler;
         }
 
         // --------------------------------------------------------------------
@@ -47,7 +51,18 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task <IActionResult> GetAllRoutes()
         {
-            return Ok(await _bBSRoutes.GetAllRoutes());
+            try
+            {
+                return Ok(await _bBSRoutes.GetAllRoutes());
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching all Routes");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -62,7 +77,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetRoutesCount()
         {
-            return Ok(await _bBSRoutes.GetRoutesCount());
+            try
+            {
+                return Ok(await _bBSRoutes.GetRoutesCount());
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error fetching Routes counts ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -78,7 +104,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> AddRoute([FromBody] RequestAddRoutes addRoutes)
         {
-            return Ok(await _bBSRoutes.AddRoutes(addRoutes));
+            try
+            {
+                return Ok(await _bBSRoutes.AddRoutes(addRoutes));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While add routes  ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -94,7 +131,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateRoute([FromBody] RequestUpdateRoutes updateRoutesInfo)
         {
-            return Ok(await _bBSRoutes.UpdateRoutes(updateRoutesInfo));
+            try
+            {
+                return Ok(await _bBSRoutes.UpdateRoutes(updateRoutesInfo));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While update routes ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -110,7 +158,18 @@ namespace BusBookingSystem.API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteRoute([FromQuery] int routeId)
         {
-            return Ok(await _bBSRoutes.DeleteRoutes(routeId));
+            try
+            {
+                return Ok(await _bBSRoutes.DeleteRoutes(routeId));
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error While delete routes");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
 
         // --------------------------------------------------------------------
@@ -127,11 +186,22 @@ namespace BusBookingSystem.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> FilterRoutes([FromQuery] string source, [FromQuery] string destination, [FromQuery] DateTime travelDate)
         {
-            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination) || travelDate == default(DateTime))
-                return BadRequest(new { Message = "Source, Destination, and valid TravelDate are required." });
+            try
+            {
+                if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination) || travelDate == default(DateTime))
+                    return BadRequest(new { Message = "Source, Destination, and valid TravelDate are required." });
 
-            var routes = await _bBSRoutes.FilterRoutes(source, destination, travelDate);
-            return Ok(routes);
+                var routes = await _bBSRoutes.FilterRoutes(source, destination, travelDate);
+                return Ok(routes);
+            }
+            catch (Exception ex)
+            {
+                // You can log the error
+                _errorHandler.Capture(ex, "Error Filtrer and flecth routes ");
+
+                // Return proper response
+                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+            }
         }
     }
 }
