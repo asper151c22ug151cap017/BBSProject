@@ -54,7 +54,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>List of all seat records.</returns>
         [HttpGet]
         [Route("GetAllSeats")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetAllSeats()
         {
             try

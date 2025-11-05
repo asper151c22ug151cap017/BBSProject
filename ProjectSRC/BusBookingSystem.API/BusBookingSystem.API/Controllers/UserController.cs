@@ -1,10 +1,10 @@
 ﻿// ============================================================================
 // Project Name : BusBookingSystem
 // File Name    : UserController.cs
-// Created By   : [Your Name]
-// Created On   : [Date]
-// Modified By  : [Your Name]
-// Modified On  : [Date]
+// Created By   : Kaviraj M
+// Created On   : 19/09/2025
+// Modified By  : Kaviraj M
+// Modified On  : 05/11/2025
 // Description  : Handles all user-related operations such as registration,
 //                retrieval, updating, deletion, and user count management
 //                within the Bus Booking System.
@@ -110,7 +110,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Status message indicating update result.</returns>
         [HttpPut]
         [Route("UpdateUser")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> UpdateUser([FromBody] RequestUpdateUser updateUserInfo)
         {
             try
@@ -163,6 +163,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Total number of users.</returns>
         [HttpGet]
         [Route("GetUserCount")]
+        [Authorize]
         public async Task<IActionResult> GetUserCount()
         {
             try
@@ -191,6 +192,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>User details for the specified ID.</returns>
         [HttpGet]
         [Route("GetUserById")]
+        [Authorize]
         public async Task<IActionResult> GetUserById([FromQuery] int userId)
         {
             try
@@ -210,6 +212,7 @@ namespace BusBookingSystem.API.Controllers
 
         [HttpPut]
         [Route("UpdateUserProfile")]
+        [Authorize]
         public async Task<IActionResult> UpdateUserProfile([FromBody] RequestUserUpdateDto updateUserProfile)
         {
             try

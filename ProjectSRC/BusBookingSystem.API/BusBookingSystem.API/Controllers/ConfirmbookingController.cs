@@ -78,7 +78,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Status message indicating operation result.</returns>
         [HttpPost]
         [Route("AddPassenger")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> AddPassenger([FromBody] Addpassengers addpassengers)
         {
             try

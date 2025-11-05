@@ -4,7 +4,7 @@
 // Created By   : Kaviraj M
 // Created On   : 19/09/2025
 // Modified By  : Kaviraj M
-// Modified On  : 28/10/2025
+// Modified On  : 05/11/2025
 // Description  :  This class (BBSUser) handles all user-related operations in the Bus Booking System.
 //                 It performs CRUD actions, user count retrieval, and manages user data using Entity Framework.
 //                 Includes proper error handling, soft delete, and audit fields (CreatedBy, ModifiedBy, etc.).
@@ -125,7 +125,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             catch (Exception ex)
             {
                 _errorHandler.Capture(ex, "Error while adding a new user.");
-                throw new Exception("An error occurred while adding a user.", ex);
+                throw new Exception("An error occurred while adding a user", ex);
             }
         }
 
@@ -146,7 +146,10 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
 
                 var user = await _dbContext.Tblusers.FirstOrDefaultAsync(x => x.UserId == updateUserInfo.UserId);
                 if (user == null)
-                    return "User not found.";
+
+                {
+                    return $"user not founded";
+                }
 
                 _mapper.Map(updateUserInfo, user);
 

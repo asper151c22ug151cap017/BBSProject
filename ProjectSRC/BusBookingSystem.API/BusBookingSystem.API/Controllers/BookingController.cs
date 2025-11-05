@@ -4,7 +4,7 @@
 // Created By   : Kaviraj M
 // Created On   : 20/09/2025
 // Modified By  : Kaviraj M
-// Modified On  : 28/10/2025
+// Modified On  : 05/11/2025
 // Description  : Handles all booking-related operations in the Bus Booking System,
 //                including creating, updating, deleting, and retrieving bookings.
 // =================================================================================
@@ -28,6 +28,7 @@ namespace BusBookingSystem.API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+
     public class BookingController : ControllerBase
     {
         private readonly IBBSbooking _bBSbooking;
@@ -53,7 +54,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Returns a list of all bookings.</returns>
         [HttpGet]
         [Route("Getallbookings")]
-
+        [Authorize]
         public async Task<IActionResult> Getallbookings()
         {
             try
@@ -79,7 +80,7 @@ namespace BusBookingSystem.API.Controllers
         /// </summary>
         [HttpGet]
         [Route ("Getbokingcounts")]
-        [AllowAnonymous]
+        [Authorize]
 
         public async Task< IActionResult> Getbookingcount()
         {
@@ -195,7 +196,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Returns a list of recently made bookings.</returns>
         [HttpGet]
         [Route("Getrecentbookings")]
-
+        [Authorize]
         public async Task<IActionResult> Getrecentbookings()
         {
             try

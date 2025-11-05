@@ -4,7 +4,7 @@
 // Created By   : Kaviraj M
 // Created On   : 19/09/2025
 // Modified By  : Kaviraj M
-// Modified On  : 28/10/2025
+// Modified On  : 05/11/2025
 // Description  : Handles all bus-related operations in the Bus Booking System,
 //                including adding, updating, deleting, and retrieving buses.
 // ==============================================================================
@@ -166,6 +166,7 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Total count of buses.</returns>
         [HttpGet]
         [Route("GetBusescount")]
+        [Authorize]
         public async Task<IActionResult> GetBusescount()
         {
             try
