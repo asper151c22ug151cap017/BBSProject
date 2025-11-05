@@ -51,9 +51,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetAllSeats")]
         [AllowAnonymous]
-        public IActionResult GetAllSeats()
+        public async Task<IActionResult> GetAllSeats()
         {
-            return Ok(_bBsSeats.GetAllSeats());
+            return Ok(await _bBsSeats.GetAllSeats());
         }
 
         // --------------------------------------------------------------------
@@ -67,9 +67,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetParticularBusSeats")]
         [AllowAnonymous]
-        public IActionResult GetParticularBusSeats([FromQuery] int busId, DateTime travelDate)
+        public async Task<IActionResult> GetParticularBusSeats([FromQuery] int busId, DateTime travelDate)
         {
-            return Ok(_bBsSeats.GetparthicularbusSeats(busId, travelDate));
+            return Ok(await _bBsSeats.GetparthicularbusSeats(busId, travelDate));
         }
 
         // --------------------------------------------------------------------
@@ -83,14 +83,14 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("AddSeat")]
         [Authorize]
-        public IActionResult AddSeat([FromBody] RequestAddSeats addSeats)
+        public async Task<IActionResult> AddSeat([FromBody] RequestAddSeats addSeats)
         {
             if (addSeats.SeatNumber.Length > 10)
             {
                 return BadRequest(new { Message = "Seat number cannot exceed 10 characters." });
             }
 
-            return Ok(_bBsSeats.AddSeats(addSeats));
+            return Ok(await _bBsSeats.AddSeats(addSeats));
         }
 
         // --------------------------------------------------------------------
@@ -104,9 +104,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpPut]
         [Route("UpdateSeat")]
         [Authorize]
-        public IActionResult UpdateSeat([FromBody] RequestUpdateSeats updateSeatsInfo)
+        public async Task<IActionResult> UpdateSeat([FromBody] RequestUpdateSeats updateSeatsInfo)
         {
-            return Ok(_bBsSeats.UpdateSeats(updateSeatsInfo));
+            return Ok(await _bBsSeats.UpdateSeats(updateSeatsInfo));
         }
 
         // --------------------------------------------------------------------
@@ -120,9 +120,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpDelete]
         [Route("DeleteSeat")]
         [Authorize]
-        public IActionResult DeleteSeat([FromQuery] int seatId)
+        public async Task<IActionResult> DeleteSeat([FromQuery] int seatId)
         {
-            return Ok(_bBsSeats.DeleteSeats(seatId));
+            return Ok(await _bBsSeats.DeleteSeats(seatId));
         }
 
         // --------------------------------------------------------------------
@@ -137,12 +137,12 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetAvailableSeats")]
         [AllowAnonymous]
-        public IActionResult GetAvailableSeats([FromQuery] int busId, [FromQuery] DateTime? date)
+        public async Task<IActionResult> GetAvailableSeats([FromQuery] int busId, [FromQuery] DateTime? date)
         {
             if (date == null)
                 return BadRequest(new { Message = "Date is required to check seat availability." });
 
-            return Ok(_bBsSeats.GetAvailableseats(busId, date.Value));
+            return Ok(await _bBsSeats.GetAvailableseats(busId, date.Value));
         }
     }
 }

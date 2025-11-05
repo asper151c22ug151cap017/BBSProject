@@ -52,11 +52,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Retrieves all active users from the database.
         /// </summary>
         /// <returns>List of users mapped to Response DTOs.</returns>
-        public List<ResponseGetusersDto> Getusers()
+        public async Task <List<ResponseGetusersDto>> Getusers()
         {
             try
             {
-                return _dbContext.Tblusers.AsNoTracking()
+                return await _dbContext.Tblusers.AsNoTracking()
                     .Select(x => new ResponseGetusersDto
                     {
                         UserId = x.UserId,
@@ -67,7 +67,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         GenderId = x.GenderId,
                         IsActive = x.IsActive,
                         RoleId = x.RoleId
-                    }).ToList();
+                    }).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -84,14 +84,14 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="addUser">The user details to add.</param>
         /// <returns>Result message.</returns>
-        public string AddUsers(RequestAdduser addUser)
+        public async Task<string> AddUsers(RequestAdduser addUser)
         {
             try
             {
                 if (addUser == null)
                     return "Invalid input.";
 
-                bool existingUser = _dbContext.Tblusers.Any(e => e.Email == addUser.Email);
+                bool existingUser = await _dbContext.Tblusers.AnyAsync(e => e.Email == addUser.Email);
                 if (existingUser)
                     throw new Exception("Email already exists.");
 
@@ -113,12 +113,12 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 };
 
                 _dbContext.Tblusers.Add(newUser);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
 
                 // Update CreatedBy and ModifiedBy with the new user's ID
                 newUser.CreatedBy = newUser.UserId;
                 newUser.ModifiedBy = newUser.UserId;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
 
                 return "User added successfully.";
             }
@@ -137,22 +137,22 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="updateUserInfo">The updated user data.</param>
         /// <returns>Result message.</returns>
-        public string UpdateUser(RequestUpdateUser updateUserInfo)
+        public async Task<string> UpdateUser(RequestUpdateUser updateUserInfo)
         {
             try
             {
                 if (updateUserInfo == null || updateUserInfo.UserId <= 0)
                     return "Invalid UserId.";
 
-                var user = _dbContext.Tblusers.FirstOrDefault(x => x.UserId == updateUserInfo.UserId);
+                var user = await _dbContext.Tblusers.FirstOrDefaultAsync(x => x.UserId == updateUserInfo.UserId);
                 if (user == null)
                     return "User not found.";
 
                 _mapper.Map(updateUserInfo, user);
 
                 _dbContext.Tblusers.Update(user);
-                 
-                _dbContext.SaveChanges();
+
+                await _dbContext.SaveChangesAsync();
                 return "User updated successfully.";
             }
             catch (Exception ex)
@@ -171,11 +171,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="userId">The ID of the user to delete.</param>
         /// <returns>Result message.</returns>
-        public string DeleteUser(int userId)
+        public async Task<string> DeleteUser(int userId)
         {
             try
             {
-                var user = _dbContext.Tblusers.FirstOrDefault(u => u.UserId == userId);
+                var user = await _dbContext.Tblusers.FirstOrDefaultAsync(u => u.UserId == userId);
                 if (user == null)
                     return "User not found.";
 
@@ -185,7 +185,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 user.ModifiedBy = userId;
 
                 _dbContext.Tblusers.Update(user);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
 
                 return "User deleted successfully.";
             }
@@ -204,11 +204,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Retrieves the total number of users in the database.
         /// </summary>
         /// <returns>User count.</returns>
-        public int GetUserCount()
+        public async Task<int> GetUserCount()
         {
             try
             {
-                return _dbContext.Tblusers.Count();
+                return await _dbContext.Tblusers.CountAsync();
             }
             catch (Exception ex)
             {
@@ -225,13 +225,13 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="userId">The user ID.</param>
         /// <returns>User details mapped to a response DTO.</returns>
-        public List<ResponseuserbyidDto> GetUserbyId(int userId)
+        public async Task <List<ResponseuserbyidDto>> GetUserbyId(int userId)
         {
             try
             {
-                return _dbContext.Tblusers
+                return await _dbContext.Tblusers
                     .Where(x => x.UserId == userId)
-                    .ProjectTo<ResponseuserbyidDto>(_mapper.ConfigurationProvider).ToList();
+                    .ProjectTo<ResponseuserbyidDto>(_mapper.ConfigurationProvider).ToListAsync();
             }
             catch (Exception ex)
             {

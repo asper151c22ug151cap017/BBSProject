@@ -53,15 +53,15 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="addBuses">The DTO containing bus details to add.</param>
         /// <returns>Status message indicating success or failure.</returns>
-        public string AddBuses(RequestAddBuses addBuses)
+        public async Task<string> AddBuses(RequestAddBuses addBuses)
         {
             try
             {
                 var now = DateTime.Now;
                 if (addBuses == null)
                     return "Invalid Input";
-                var existingBuses = _dbBbsContext.Tblbuses.Include(x=> x.Tblbookings).ThenInclude(x=> x.User)
-                    .Any(y => y.Busnumber == addBuses.Busnumber && y.OperatorNumber == addBuses.OperatorNumber);
+                var existingBuses = await _dbBbsContext.Tblbuses.Include(x=> x.Tblbookings).ThenInclude(x=> x.User)
+                    .AnyAsync(y => y.Busnumber == addBuses.Busnumber && y.OperatorNumber == addBuses.OperatorNumber);
                 if (existingBuses)
                     throw new Exception("Busnumber or Operatornumber Already Exist");
                 var NewBuses = new Tblbuse
@@ -78,9 +78,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 };
 
                 _dbBbsContext.Tblbuses.Add(NewBuses);
-                _dbBbsContext.SaveChanges();
+                await _dbBbsContext.SaveChangesAsync();
 
-                var addcreatedby = _dbBbsContext.Tblbuses.FirstOrDefault();
+                var addcreatedby = await _dbBbsContext.Tblbuses.FirstOrDefaultAsync();
 
                 if (addcreatedby != null)
                 {
@@ -106,18 +106,18 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="busId">The unique ID of the bus to delete.</param>
         /// <returns>Status message indicating success or failure.</returns>
-        public string DeleteBuses(int busId)
+        public async Task<string> DeleteBuses(int busId)
         {
             try
             {
-                var deletebus = _dbBbsContext.Tblbuses.FirstOrDefault(d => d.BusId == busId);
+                var deletebus = await _dbBbsContext.Tblbuses.FirstOrDefaultAsync(d => d.BusId == busId);
                 if (deletebus != null)
                 {
                     deletebus.IsActive = false;
                     deletebus.IsDelete = true;
                     _dbBbsContext.Tblbuses.Update(deletebus);
 
-                    _dbBbsContext.SaveChanges();
+                    await _dbBbsContext.SaveChangesAsync();
                     return "Deleted Successfully";
                 }
                 else
@@ -139,11 +139,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Retrieves all buses with their details.
         /// </summary>
         /// <returns>List of all buses in the system.</returns>
-        public List<ResponseGetbuses> GetAllbuses()
+        public async Task<List<ResponseGetbuses>> GetAllbuses()
         {
             try
             {
-                return _dbBbsContext.Tblbuses
+                return await _dbBbsContext.Tblbuses
                     .Select(x => new ResponseGetbuses
                     {
                         BusId=x.BusId,
@@ -156,7 +156,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         OperatorNumber = x.OperatorNumber,
                         IsActive = x.IsActive
 
-                    }).ToList();
+                    }).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -172,9 +172,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Retrieves the total number of buses in the system.
         /// </summary>
         /// <returns>Total bus count.</returns>
-        public int GetBusesCount()
+        public async Task<int> GetBusesCount()
         {
-           return _dbBbsContext.Tblbuses.Count();
+           return await _dbBbsContext.Tblbuses.CountAsync();
         }
 
         // --------------------------------------------------------------------
@@ -187,14 +187,14 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// The DTO containing updated bus information such as name, type, and fare.
         /// </param>
         /// <returns>Status message indicating whether the update was successful.</returns>
-        public string UpdateBuses(RequestUpdateBuses updateBusesinfo)
+        public async Task<string> UpdateBuses(RequestUpdateBuses updateBusesinfo)
         {
             try
             {
                 if (updateBusesinfo != null && updateBusesinfo.BusId > 0)
                 {
-                    var Buses = _dbBbsContext.Tblbuses.Include(x=> x.Tblbookings).ThenInclude(x=> x.User)
-                        .FirstOrDefault(x => x.BusId == updateBusesinfo.BusId);
+                    var Buses = await _dbBbsContext.Tblbuses.Include(x=> x.Tblbookings).ThenInclude(x=> x.User)
+                        .FirstOrDefaultAsync(x => x.BusId == updateBusesinfo.BusId);
                     if (Buses != null)
                     {
                         Buses.BusId = updateBusesinfo.BusId;
@@ -206,14 +206,14 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         Buses.OperatorName = updateBusesinfo.OperatorName;
                         Buses.OperatorNumber = updateBusesinfo.OperatorNumber;
 
-                        _dbBbsContext.SaveChanges();
+                        await _dbBbsContext.SaveChangesAsync();
 
-                        var modifiedby = _dbBbsContext.Tblbuses.FirstOrDefault();
+                        var modifiedby = await _dbBbsContext.Tblbuses.FirstOrDefaultAsync();
                         if (modifiedby != null)
                         {
                             modifiedby.ModifiedAt = DateTime.Now;
                             modifiedby.ModifiedBy = updateBusesinfo.UserId;
-                            _dbBbsContext.SaveChanges();
+                            await _dbBbsContext.SaveChangesAsync();
                         }
 
                     }

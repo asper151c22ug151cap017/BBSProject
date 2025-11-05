@@ -37,7 +37,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A list of <see cref="ResponseRoutes"/> representing all routes.
         /// </returns>
-        List<ResponseRoutes> GetAllRoutes();
+       Task< List<ResponseRoutes>> GetAllRoutes();
 
         // --------------------------------------------------------------------
         // ✅ ADD ROUTE
@@ -51,7 +51,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A status message indicating the result of the add operation.
         /// </returns>
-        string AddRoutes(RequestAddRoutes addRoutes);
+       Task <string> AddRoutes(RequestAddRoutes addRoutes);
 
 
         // --------------------------------------------------------------------
@@ -66,7 +66,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A message indicating whether the update was successful.
         /// </returns>
-        string UpdateRoutes( RequestUpdateRoutes updateRoutesinfo);
+        Task<string> UpdateRoutes( RequestUpdateRoutes updateRoutesinfo);
 
         // --------------------------------------------------------------------
         // ✅ DELETE ROUTE
@@ -78,7 +78,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A message indicating the result of the delete operation.
         /// </returns>
-        string DeleteRoutes(int RouteId);
+        Task<string> DeleteRoutes(int RouteId);
 
         // --------------------------------------------------------------------
         // ✅ FILTER ROUTES
@@ -92,7 +92,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A filtered list of <see cref="ResponseRoutes"/> matching the criteria.
         /// </returns>
-        List<ResponseRoutes> FilterRoutes(string Source, string Destination, DateTime TravelDate);
+        Task<List<ResponseRoutes>> FilterRoutes(string Source, string Destination, DateTime TravelDate);
 
         // --------------------------------------------------------------------
         // ✅ GET ROUTE COUNT
@@ -103,6 +103,6 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// The total count of routes as an integer.
         /// </returns>
-        int GetRoutesCount();
+        Task< int> GetRoutesCount();
     }
 }

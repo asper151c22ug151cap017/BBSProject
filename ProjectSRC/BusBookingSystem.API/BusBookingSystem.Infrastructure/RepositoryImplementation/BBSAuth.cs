@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using BusBookingSystem.Application;
 using BusBookingSystem.Domain.Models;
 using BusBookingSystem.Infrastructure.RepositoryInterface;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusBookingSystem.Infrastructure.RepositoryImplementation
 {
@@ -50,9 +51,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Returns the <see cref="Tbluser"/> object if authentication is successful;
         /// otherwise, returns null.
         /// </returns>
-        public Tbluser Login(string email, string password)
+        public async Task <Tbluser> Login(string email, string password)
         {
-            var user = _dbBbsContext.Tblusers.FirstOrDefault(e => e.Email == email);
+            var user = await _dbBbsContext.Tblusers.FirstOrDefaultAsync(e => e.Email == email);
             if (user == null)
                 return null;
 

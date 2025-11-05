@@ -53,7 +53,8 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A message indicating whether passenger data was successfully added.
         /// </returns>
-        string Addpassaengers(Addpassengers addpassengers);
+        Task<string> AddPassengersAsync(Addpassengers addpassengers);
+
 
 
         // --------------------------------------------------------------------
@@ -66,7 +67,8 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A list of <see cref="BookingResponse"/> containing booking information.
         /// </returns>
-        List<BookingResponse> GetBookingByid(int userId);
+        Task<List<BookingResponse>> GetBookingsByUserIdAsync(int userId);
+
 
         // --------------------------------------------------------------------
         // ✅ ADD BOOKING
@@ -80,7 +82,8 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A <see cref="ResponsebookingDto"/> object containing booking confirmation details.
         /// </returns>
-        ResponsebookingDto Addbooking(Requestbookingdto addbookings);
+        Task<ResponsebookingDto> AddBookingAsync(Requestbookingdto addbookings);
+
 
 
         // --------------------------------------------------------------------
@@ -93,7 +96,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A message indicating the result of the cancellation process.
         /// </returns>
-        string Cancellbooking(int Bookingid);
+        Task<string> CancelBookingAsync(int bookingId);
+
+
 
         // --------------------------------------------------------------------
         // ✅ DOWNLOAD TICKETS
@@ -105,7 +110,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A list of <see cref="ResponseDownloadtickets"/> objects representing the ticket details.
         /// </returns>
-        List<ResponseDownloadtickets> DownloadTickets(int Bookingid);
+        Task<List<ResponseDownloadtickets>> DownloadTicketsAsync(int bookingId);
 
     }
 }

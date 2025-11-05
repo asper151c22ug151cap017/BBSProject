@@ -29,7 +29,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// Retrieves all users from the database.
         /// </summary>
         /// <returns>List of users mapped to response DTOs.</returns>
-        List<ResponseGetusersDto> Getusers();
+        Task<List<ResponseGetusersDto>> Getusers();
 
 
         /// <summary>
@@ -37,14 +37,14 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// </summary>
         /// <param name="addUser">User details to add.</param>
         /// <returns>Status message.</returns>
-        string AddUsers(RequestAdduser adduser);
+        Task<string> AddUsers(RequestAdduser adduser);
 
         /// <summary>
         /// Updates an existing user's details.
         /// </summary>
         /// <param name="updateUserInfo">Updated user data.</param>
         /// <returns>Status message.</returns>
-        string UpdateUser(RequestUpdateUser UpdateUserinfo);
+        Task<string> UpdateUser(RequestUpdateUser UpdateUserinfo);
 
 
         /// <summary>
@@ -52,21 +52,21 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// </summary>
         /// <param name="userId">Unique ID of the user to delete.</param>
         /// <returns>Status message.</returns>
-        string DeleteUser(int UserId);
+        Task<string> DeleteUser(int UserId);
 
 
         /// <summary>
         /// Retrieves the total number of users in the database.
         /// </summary>
         /// <returns>Total user count.</returns>
-        int GetUserCount();
+        Task<int> GetUserCount();
 
         /// <summary>
         /// Retrieves user details by user ID.
         /// </summary>
         /// <param name="userId">Unique user ID.</param>
         /// <returns>User details mapped to response DTOs.</returns>
-        List<ResponseuserbyidDto> GetUserbyId(int Userid);
+        Task<List<ResponseuserbyidDto>> GetUserbyId(int Userid);
 
         Task<string> UpdateUserprofileAsync(RequestUserUpdateDto userUpdateDto);
 

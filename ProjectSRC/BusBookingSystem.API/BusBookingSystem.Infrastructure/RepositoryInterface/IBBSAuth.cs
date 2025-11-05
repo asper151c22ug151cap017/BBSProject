@@ -9,6 +9,6 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
 {
     public interface IBBSAuth
     {
-        Tbluser Login(string email, string password);
+       Task <Tbluser> Login(string email, string password);
     }
 }

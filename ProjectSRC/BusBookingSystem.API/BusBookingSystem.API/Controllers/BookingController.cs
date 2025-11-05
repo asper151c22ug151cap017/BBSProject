@@ -140,8 +140,8 @@ namespace BusBookingSystem.API.Controllers
 
         public async Task<IActionResult> Getrecentbookings()
         {
-            var bookingcount = await _bBSbooking.GetCountBookingsAsync();
-            return Ok(bookingcount);
+            var recent = await _bBSbooking.GetRecentBookingsAsync();
+            return Ok(recent);
         }
     }
 }

@@ -30,21 +30,21 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// Retrieves all seats with associated bus information.
         /// </summary>
         /// <returns>List of seats mapped to response DTOs.</returns>
-        List<ResponseGetSeats> GetAllSeats();
+       Task <List<ResponseGetSeats>> GetAllSeats();
 
         /// <summary>
         /// Adds a new seat record.
         /// </summary>
         /// <param name="addSeats">Seat details to add.</param>
         /// <returns>Status message.</returns>
-        string AddSeats(RequestAddSeats addSeats);
+        Task<string>  AddSeats(RequestAddSeats addSeats);
 
         /// <summary>
         /// Updates an existing seat record.
         /// </summary>
         /// <param name="updateSeats">Updated seat information.</param>
         /// <returns>Status message.</returns>
-        string UpdateSeats(RequestUpdateSeats UpdateSeats);
+        Task<string> UpdateSeats(RequestUpdateSeats UpdateSeats);
 
 
         /// <summary>
@@ -52,14 +52,14 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// </summary>
         /// <param name="seatId">Unique ID of the seat to delete.</param>
         /// <returns>Status message.</returns>
-        string DeleteSeats(int SeatsId);
+        Task<string> DeleteSeats(int SeatsId);
 
         /// <summary>
         /// Retrieves seats for a specific bus along with user booking information.
         /// </summary>
         /// <param name="busId">Bus ID.</param>
         /// <returns>List of seats for the given bus.</returns>
-        List<ResponseGetseatsbybusid> GetparthicularbusSeats(int Busid, DateTime travelDate);
+        Task<List<ResponseGetseatsbybusid>> GetparthicularbusSeats(int Busid, DateTime travelDate);
 
 
         /// <summary>
@@ -68,6 +68,6 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <param name="busId">Bus ID.</param>
         /// <param name="date">Journey date.</param>
         /// <returns>List of available seats with booking details.</returns>
-        List<ResponseAvailableseats> GetAvailableseats(int Busid, DateTime? Date);
+        Task<List<ResponseAvailableseats>> GetAvailableseats(int Busid, DateTime? Date);
     }
 }

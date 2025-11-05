@@ -64,9 +64,11 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("AddPassenger")]
         [Authorize]
-        public IActionResult AddPassenger([FromBody] Addpassengers addpassengers)
+        public async Task<IActionResult> AddPassenger([FromBody] Addpassengers addpassengers)
         {
-            return Ok(_confirmBooking.Addpassaengers(addpassengers));
+            
+           var passangers = await _confirmBooking.AddPassengersAsync(addpassengers);
+            return Ok(passangers);
         }
 
         // --------------------------------------------------------------------
@@ -80,9 +82,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetBookingsByUserId")]
         [Authorize]
-        public IActionResult GetBookingsByUserId([FromQuery] int userId)
+        public async Task<IActionResult> GetBookingsByUserId([FromQuery] int userId)
         {
-            return Ok(_confirmBooking.GetBookingByid(userId));
+            var passangers = await _confirmBooking.GetBookingsByUserIdAsync(userId);
+            return Ok(passangers);
         }
 
         // --------------------------------------------------------------------
@@ -96,9 +99,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("AddBooking")]
         [Authorize]
-        public IActionResult AddBooking([FromBody] Requestbookingdto addbookings)
+        public async Task<IActionResult> AddBooking([FromBody] Requestbookingdto addbookings)
         {
-            return Ok(_confirmBooking.Addbooking(addbookings));
+            var bookings = await _confirmBooking.AddBookingAsync(addbookings);
+            return Ok(bookings);
         }
 
         // --------------------------------------------------------------------
@@ -112,9 +116,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("DownloadTicket")]
         [Authorize]
-        public IActionResult DownloadTicket([FromQuery] int bookingId)
+        public async Task<IActionResult> DownloadTicket([FromQuery] int bookingId)
         {
-            return Ok(_confirmBooking.DownloadTickets(bookingId));
+            var download = await _confirmBooking.DownloadTicketsAsync(bookingId);
+            return Ok(download);
         }
 
         // --------------------------------------------------------------------
@@ -128,9 +133,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("CancelBooking")]
         [Authorize]
-        public IActionResult CancelBooking([FromQuery] int bookingId)
+        public async Task<IActionResult> CancelBooking([FromQuery] int bookingId)
         {
-            return Ok(_confirmBooking.Cancellbooking(bookingId));
+           var cancel = await _confirmBooking.CancelBookingAsync(bookingId);
+            return Ok(cancel);
         }
     }
 }

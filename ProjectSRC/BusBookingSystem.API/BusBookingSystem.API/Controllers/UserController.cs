@@ -53,9 +53,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetAllUsers")]
         [Authorize]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            return Ok(_bbsUser.Getusers());
+            return Ok(await _bbsUser.Getusers());
         }
 
         // --------------------------------------------------------------------
@@ -69,10 +69,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("AddUser")]
         [AllowAnonymous]
-        public IActionResult AddUser([FromBody] RequestAdduser addUser)
+        public async Task<IActionResult> AddUser([FromBody] RequestAdduser addUser)
         {
             addUser.Password = BBSHashCode.HashcodePassword(addUser.Password);
-            return Ok(_bbsUser.AddUsers(addUser));
+            return Ok(await _bbsUser.AddUsers(addUser));
         }
 
         // --------------------------------------------------------------------
@@ -86,9 +86,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpPut]
         [Route("UpdateUser")]
         [AllowAnonymous]
-        public IActionResult UpdateUser([FromBody] RequestUpdateUser updateUserInfo)
+        public async Task<IActionResult> UpdateUser([FromBody] RequestUpdateUser updateUserInfo)
         {
-            return Ok(_bbsUser.UpdateUser(updateUserInfo));
+            return Ok(await _bbsUser.UpdateUser(updateUserInfo));
         }
 
         // --------------------------------------------------------------------
@@ -102,9 +102,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpDelete]
         [Route("DeleteUser")]
         [Authorize]
-        public IActionResult DeleteUser([FromQuery] int userId)
+        public async Task<IActionResult> DeleteUser([FromQuery] int userId)
         {
-            return Ok(_bbsUser.DeleteUser(userId));
+            return Ok(await _bbsUser.DeleteUser(userId));
         }
 
         // --------------------------------------------------------------------
@@ -116,9 +116,9 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Total number of users.</returns>
         [HttpGet]
         [Route("GetUserCount")]
-        public IActionResult GetUserCount()
+        public async Task<IActionResult> GetUserCount()
         {
-            return Ok(_bbsUser.GetUserCount());
+            return Ok(await _bbsUser.GetUserCount());
         }
 
         // --------------------------------------------------------------------
@@ -131,9 +131,9 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>User details for the specified ID.</returns>
         [HttpGet]
         [Route("GetUserById")]
-        public IActionResult GetUserById([FromQuery] int userId)
+        public async Task<IActionResult> GetUserById([FromQuery] int userId)
         {
-            return Ok(_bbsUser.GetUserbyId(userId));
+            return Ok(await _bbsUser.GetUserbyId(userId));
         }
 
         [HttpPut]

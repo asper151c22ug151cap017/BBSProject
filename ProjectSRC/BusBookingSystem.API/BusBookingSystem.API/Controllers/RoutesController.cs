@@ -45,9 +45,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetAllRoutes")]
         [AllowAnonymous]
-        public IActionResult GetAllRoutes()
+        public async Task <IActionResult> GetAllRoutes()
         {
-            return Ok(_bBSRoutes.GetAllRoutes());
+            return Ok(await _bBSRoutes.GetAllRoutes());
         }
 
         // --------------------------------------------------------------------
@@ -60,9 +60,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetRoutesCount")]
         [Authorize]
-        public IActionResult GetRoutesCount()
+        public async Task<IActionResult> GetRoutesCount()
         {
-            return Ok(_bBSRoutes.GetRoutesCount());
+            return Ok(await _bBSRoutes.GetRoutesCount());
         }
 
         // --------------------------------------------------------------------
@@ -76,9 +76,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("AddRoute")]
         [Authorize]
-        public IActionResult AddRoute([FromBody] RequestAddRoutes addRoutes)
+        public async Task<IActionResult> AddRoute([FromBody] RequestAddRoutes addRoutes)
         {
-            return Ok(_bBSRoutes.AddRoutes(addRoutes));
+            return Ok(await _bBSRoutes.AddRoutes(addRoutes));
         }
 
         // --------------------------------------------------------------------
@@ -92,9 +92,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpPut]
         [Route("UpdateRoute")]
         [Authorize]
-        public IActionResult UpdateRoute([FromBody] RequestUpdateRoutes updateRoutesInfo)
+        public async Task<IActionResult> UpdateRoute([FromBody] RequestUpdateRoutes updateRoutesInfo)
         {
-            return Ok(_bBSRoutes.UpdateRoutes(updateRoutesInfo));
+            return Ok(await _bBSRoutes.UpdateRoutes(updateRoutesInfo));
         }
 
         // --------------------------------------------------------------------
@@ -108,9 +108,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpDelete]
         [Route("DeleteRoute")]
         [Authorize]
-        public IActionResult DeleteRoute([FromQuery] int routeId)
+        public async Task<IActionResult> DeleteRoute([FromQuery] int routeId)
         {
-            return Ok(_bBSRoutes.DeleteRoutes(routeId));
+            return Ok(await _bBSRoutes.DeleteRoutes(routeId));
         }
 
         // --------------------------------------------------------------------
@@ -125,12 +125,12 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("FilterRoutes")]
         [AllowAnonymous]
-        public IActionResult FilterRoutes([FromQuery] string source, [FromQuery] string destination, [FromQuery] DateTime travelDate)
+        public async Task<IActionResult> FilterRoutes([FromQuery] string source, [FromQuery] string destination, [FromQuery] DateTime travelDate)
         {
             if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination) || travelDate == default(DateTime))
                 return BadRequest(new { Message = "Source, Destination, and valid TravelDate are required." });
 
-            var routes = _bBSRoutes.FilterRoutes(source, destination, travelDate);
+            var routes = await _bBSRoutes.FilterRoutes(source, destination, travelDate);
             return Ok(routes);
         }
     }

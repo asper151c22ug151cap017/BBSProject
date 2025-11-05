@@ -54,7 +54,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="addRoutes">DTO containing new route details.</param>
         /// <returns>Status message.</returns>
-        public string AddRoutes(RequestAddRoutes addRoutes)
+        public async Task<string> AddRoutes(RequestAddRoutes addRoutes)
         {
             try
             {
@@ -64,12 +64,12 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     return "Invalid Input";
 
                 // ✅ Using LINQ Query Syntax instead of FirstOrDefault()
-                var busQuery =
+                var busQuery =  
                     from b in _dbBbsContext.Tblbuses
                     where b.BusId == addRoutes.Busid
                     select b;
 
-                var bus = busQuery.FirstOrDefault();
+                var bus = await busQuery.FirstOrDefaultAsync();
 
                 if (bus == null)
                     return "Bus not found";
@@ -90,7 +90,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
 
                 // ✅ Using LINQ method to add new entity
                 _dbBbsContext.Tblroutes.Add(newRoute);
-                _dbBbsContext.SaveChanges();
+               await _dbBbsContext.SaveChangesAsync();
 
                 return "Added Successfully";
             }
@@ -110,18 +110,18 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="routeId">Route ID to be deleted.</param>
         /// <returns>Status message.</returns>
-        public string DeleteRoutes(int RouteId)
+        public async Task<string> DeleteRoutes(int RouteId)
         {
             try
             {
-                var deleteroutes = _dbBbsContext.Tblroutes.FirstOrDefault(d => d.RouteId == RouteId);
+                var deleteroutes = await _dbBbsContext.Tblroutes.FirstOrDefaultAsync(d => d.RouteId == RouteId);
                 if (deleteroutes != null)
                 {
                     deleteroutes.IsActive = false;
                     deleteroutes.IsDelete = true;
                     _dbBbsContext.Tblroutes.Update(deleteroutes);
 
-                    _dbBbsContext.SaveChanges();
+                    await _dbBbsContext.SaveChangesAsync();
                     return "Deleted Successfully";
                 }
                 else
@@ -146,7 +146,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// <param name="source">Starting point of the route.</param>
         /// <param name="destination">Ending point of the route.</param>
         /// <returns>List of routes matching the criteria.</returns>
-        public List<ResponseRoutes> FilterRoutes(string Source, string Destination, DateTime TravelDate)
+        public async Task< List<ResponseRoutes>> FilterRoutes(string Source, string Destination, DateTime TravelDate)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 // ✅ FIX: Do NOT convert to local time — it causes one-day shift
                 var travelDateOnly = TravelDate.Date;
 
-                var routes = _dbBbsContext.Tblroutes
+                var routes = await _dbBbsContext.Tblroutes
                     .Include(r => r.Bus)
                         .ThenInclude(b => b.Tblbusratings)
                     .Include(r => r.Bus)
@@ -169,7 +169,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                             .ThenInclude(bk => bk.Tblbookingseats)
                     .Where(r => r.Source.Trim().ToLower() == sourceNormalized
                              && r.Destination.Trim().ToLower() == destinationNormalized)
-                    .ToList();
+                    .ToListAsync();
 
                 var result = new List<ResponseRoutes>();
 
@@ -180,7 +180,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         continue;
 
                     // ✅ Use the travelDateOnly directly
-                    var bookedSeatNumbers = bus.Tblbookings?
+                    var bookedSeatNumbers =  bus.Tblbookings?
                         .Where(bk => bk.BookingDate.HasValue
                                   && bk.BookingDate.Value.Date == travelDateOnly
                                   && bk.Status.ToLower() != "cancelled")
@@ -228,11 +228,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Retrieves all active routes with associated bus details.
         /// </summary>
         /// <returns>List of all active routes.</returns>
-        public List<ResponseRoutes> GetAllRoutes()
+        public async Task< List<ResponseRoutes>> GetAllRoutes()
         {
             try
             {
-                var result = (from r in _dbBbsContext.Tblroutes
+                var result = await (from r in _dbBbsContext.Tblroutes
                               join b in _dbBbsContext.Tblbuses
                               on r.BusId equals b.BusId
                               where r.IsActive == true
@@ -249,7 +249,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                                   BusName = b.BusName,
                                   Fare = b.Fare,
                                   BusType = b.BusType
-                              }).ToList();
+                              }).ToListAsync();
 
                 return result;
             }
@@ -269,9 +269,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Retrieves the total number of routes in the system.
         /// </summary>
         /// <returns>Total count of routes.</returns>
-        public int GetRoutesCount()
+        public async Task<int> GetRoutesCount()
         {
-            return _dbBbsContext.Tblroutes.Count();
+            return await _dbBbsContext.Tblroutes.CountAsync();
         }
 
         // --------------------------------------------------------------------
@@ -282,18 +282,18 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="updateRoutesInfo">Updated route details DTO.</param>
         /// <returns>Status message.</returns>
-        public string UpdateRoutes(RequestUpdateRoutes updateRoutesinfo )
+        public async Task<string> UpdateRoutes(RequestUpdateRoutes updateRoutesinfo )
         {
             try
             {
                 if (updateRoutesinfo != null && updateRoutesinfo.RouteId > 0)
                 {
                     // ✅ LINQ query to get route with related bus details
-                    var query = (from r in _dbBbsContext.Tblroutes
+                    var query = await (from r in _dbBbsContext.Tblroutes
                                  join b in _dbBbsContext.Tblbuses
                                  on r.BusId equals b.BusId
                                  where r.RouteId == updateRoutesinfo.RouteId
-                                 select new { Route = r, Bus = b }).FirstOrDefault();
+                                 select new { Route = r, Bus = b }).FirstOrDefaultAsync();
 
                     if (query != null)
                     {
@@ -316,7 +316,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         route.ModifiedBy = updateRoutesinfo.UserId;
 
                         // ✅ Save all changes
-                        _dbBbsContext.SaveChanges();
+                       await _dbBbsContext.SaveChangesAsync();
                     }
                 }
             

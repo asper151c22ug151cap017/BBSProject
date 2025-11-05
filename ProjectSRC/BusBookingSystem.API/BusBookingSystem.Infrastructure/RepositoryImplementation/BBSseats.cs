@@ -51,7 +51,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="addSeats">Seat details to be added.</param>
         /// <returns>Status message.</returns>
-        public string AddSeats(RequestAddSeats addSeats)
+        public async Task<string> AddSeats(RequestAddSeats addSeats)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 };
 
                 _dbBbsContext.Tblseats.Add(Newseats);
-                _dbBbsContext.SaveChanges();
+                await _dbBbsContext.SaveChangesAsync();
 
                 //NewRoutes.CreatedBy = addRoutes.Busid;
 
@@ -90,18 +90,18 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="seatId">Seat ID to be deleted.</param>
         /// <returns>Status message.</returns>
-        public string DeleteSeats(int SeatsId)
+        public async Task<string> DeleteSeats(int SeatsId)
         {
             try
             {
-                var deleteseats = _dbBbsContext.Tblseats.FirstOrDefault(d => d.SeatId == SeatsId);
+                var deleteseats = await _dbBbsContext.Tblseats.FirstOrDefaultAsync(d => d.SeatId == SeatsId);
                 if (deleteseats != null)
                 {
                     deleteseats.IsActive = false;
                     deleteseats.IsDelete = true;
                     _dbBbsContext.Tblseats.Update(deleteseats);
 
-                    _dbBbsContext.SaveChanges();
+                    await _dbBbsContext.SaveChangesAsync();
                     return "Deleted Successfully";
                 }
                 else
@@ -123,11 +123,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// Retrieves all seats including their associated bus details.
         /// </summary>
         /// <returns>List of seats mapped to response DTOs.</returns>
-        public List<ResponseGetSeats> GetAllSeats()
+        public async Task <List<ResponseGetSeats>> GetAllSeats()
         {
             try
             {
-                return _dbBbsContext.Tblseats.Include(x=>x.Bus)
+                return await _dbBbsContext.Tblseats.Include(x=>x.Bus)
                     .AsNoTracking()
                     .Select(x => new ResponseGetSeats
                     {
@@ -135,7 +135,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                        SeatNumber = x.SeatNumber,
                      
                        BusId=x.Bus.BusId
-                    }).ToList();
+                    }).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -154,7 +154,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// <param name="busId">Bus ID.</param>
         /// <param name="date">Journey date.</param>
         /// <returns>List of available seats with booking details.</returns>
-        public List<ResponseAvailableseats> GetAvailableseats(int Busid, DateTime? date)
+        public async Task <List<ResponseAvailableseats>> GetAvailableseats(int Busid, DateTime? date)
         {
             try
             {
@@ -167,12 +167,12 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 var targetDate = date.Value.Date;
 
                 // ✅ Fetch all seats for the given bus
-                var allSeats = _dbBbsContext.Tblseats
+                var allSeats = await _dbBbsContext.Tblseats
                     .Where(s => s.BusId == Busid)
-                    .ToList();
+                    .ToListAsync();
 
                 // ✅ Fetch all booked seat IDs for this bus on the selected date (excluding cancelled)
-                var bookedSeatIds = _dbBbsContext.Tblbookingseats
+                var bookedSeatIds = await _dbBbsContext.Tblbookingseats
                     .Include(bs => bs.Booking)
                     .Where(bs => bs.BusId == Busid
                               && bs.Booking != null
@@ -180,7 +180,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                               && bs.Booking.BookingDate.Value.Date == targetDate
                               && bs.Booking.Status.ToLower() != "cancelled")
                     .Select(bs => bs.SeatId)
-                    .ToList();
+                    .ToListAsync();
 
                 // ✅ Identify available seats
                 var availableSeats = allSeats
@@ -221,7 +221,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="busId">Bus ID.</param>
         /// <returns>List of seats with user booking information.</returns>
-        public List<ResponseGetseatsbybusid> GetparthicularbusSeats(int busId, DateTime travelDate)
+        public async Task< List<ResponseGetseatsbybusid>> GetparthicularbusSeats(int busId, DateTime travelDate)
         {
             try
             {
@@ -232,13 +232,13 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 var normalizedDate = travelDate.Date;
 
                 // ✅ Fetch all seats for the given bus
-                var seats = _dbBbsContext.Tblseats
+                var seats = await _dbBbsContext.Tblseats
                              .Include(s => s.Bus)
                              .Where(s => s.BusId == busId)
-                             .ToList();
+                             .ToListAsync();
 
                 // ✅ Fetch only booked seat IDs for the same bus & selected travel date
-                var bookedSeatIds = _dbBbsContext.Tblbookingseats
+                var bookedSeatIds = await _dbBbsContext.Tblbookingseats
                     .Include(bs => bs.Booking)
                     .Where(bs =>
                         bs.Booking.BusId == busId &&
@@ -246,7 +246,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         bs.Booking.Status.ToLower() != "cancelled"
                     )
                     .Select(bs => bs.SeatId)
-                    .ToList();
+                    .ToListAsync();
 
                 // ✅ Build response
                 var response = seats.Select(s => new ResponseGetseatsbybusid
@@ -277,20 +277,20 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// <param name="updateSeats">Updated seat data.</param>
         /// <returns>Status message.</returns>
 
-        public string UpdateSeats(RequestUpdateSeats UpdateSeats)
+        public async Task<string> UpdateSeats(RequestUpdateSeats UpdateSeats)
         {
             try
             {
                 if (UpdateSeats != null && UpdateSeats.SeatId > 0)
                 {
-                    var seats = _dbBbsContext.Tblseats.FirstOrDefault(x => x.SeatId == UpdateSeats.SeatId);
+                    var seats = await _dbBbsContext.Tblseats.FirstOrDefaultAsync(x => x.SeatId == UpdateSeats.SeatId);
                     if (seats != null)
                     {
                       seats.SeatId = UpdateSeats.SeatId;
                         seats.SeatNumber = UpdateSeats.SeatNumber;
                       
                         seats.ModifiedAt=DateTime.Now;
-                        _dbBbsContext.SaveChanges();
+                        await _dbBbsContext.SaveChangesAsync();
 
 
                     }

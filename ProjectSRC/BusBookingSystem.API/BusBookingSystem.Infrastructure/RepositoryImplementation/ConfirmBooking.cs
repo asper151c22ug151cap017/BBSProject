@@ -56,7 +56,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="addpassengers">Passenger details DTO.</param>
         /// <returns>Status message.</returns>
-        public string Addpassaengers(Addpassengers addpassengers)
+        public async Task<string> AddPassengersAsync(Addpassengers addpassengers)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 };
 
                 _dbBbsContext.Tblpassengers.Add(passenger);
-                _dbBbsContext.SaveChanges();
+                await _dbBbsContext.SaveChangesAsync();
 
                 return "Added Successfully";
             }
@@ -91,9 +91,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="addbookings">Booking request DTO.</param>
         /// <returns>Response DTO containing booking details and status.</returns>
-        public ResponsebookingDto Addbooking(Requestbookingdto addbookings)
+        public async Task<ResponsebookingDto> AddBookingAsync(Requestbookingdto addbookings)
         {
-            using var transaction = _dbBbsContext.Database.BeginTransaction();
+            using var transaction = await _dbBbsContext.Database.BeginTransactionAsync();
             try
             {
                 if (addbookings == null || addbookings.UserId <= 0 || addbookings.BusId <= 0 || addbookings.RouteId <= 0)
@@ -125,7 +125,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 };
 
                 _dbBbsContext.Tblbookings.Add(booking);
-                _dbBbsContext.SaveChanges();
+                await _dbBbsContext.SaveChangesAsync();
 
                 // ✅ 2. Add passengers
                 if (addbookings.Passangers != null && addbookings.Passangers.Any())
@@ -139,7 +139,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     }).ToList();
 
                     _dbBbsContext.Tblpassengers.AddRange(passengers);
-                    _dbBbsContext.SaveChanges();
+                   await _dbBbsContext.SaveChangesAsync();
                 }
 
                 // ✅ 3. Handle seat booking (date-wise availability)
@@ -151,7 +151,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     .ToList();
 
                 // ✅ 4. Check if any of these seats are already booked for the same bus on same date
-                var bookedSeatIds = _dbBbsContext.Tblbookingseats
+                var bookedSeatIds = await _dbBbsContext.Tblbookingseats
                     .Where(bs =>
                       bs.BusId == addbookings.BusId &&
                             bs.Booking.BookingDate.HasValue &&
@@ -159,7 +159,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         (bs.Booking.IsDelete != true) &&
                          (bs.Booking.Status != "Cancelled"))
                         .Select(bs => bs.SeatId)
-                             .ToList();
+                             .ToListAsync();
 
 
                 var unavailableSeats = seatsToBook.Where(s => bookedSeatIds.Contains(s.SeatId)).ToList();
@@ -184,7 +184,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 }).ToList();
 
                 _dbBbsContext.Tblbookingseats.AddRange(bookingSeats);
-                _dbBbsContext.SaveChanges();
+               await _dbBbsContext.SaveChangesAsync();
 
                 transaction.Commit();
 
@@ -256,11 +256,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="userId">User ID.</param>
         /// <returns>List of bookings with associated details.</returns>
-        public List<BookingResponse> GetBookingByid(int userId)
+        public async Task<List<BookingResponse>> GetBookingsByUserIdAsync(int userId)
         {
             try
             {
-                var booking = (from b in _dbBbsContext.Tblbookings
+                var booking =await (from b in _dbBbsContext.Tblbookings
                                join s in _dbBbsContext.Tblusers on b.UserId equals s.UserId
                                join a in _dbBbsContext.Tblbuses on b.BusId equals a.BusId
                                join c in _dbBbsContext.Tblroutes on b.RouteId equals c.RouteId
@@ -311,7 +311,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                                                          Destination = b.Route.Destination
                                                      }).ToList()
                                    }
-                               }).ToList();
+                               }).ToListAsync();
                 return booking;
             }
             catch (Exception ex)
@@ -330,13 +330,13 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="Bookingid">Booking ID.</param>
         /// <returns>Status message.</returns>
-        public string Cancellbooking(int bookingId)
+        public async Task<string> CancelBookingAsync(int bookingId)
         {
             try
             {
-                var booking = _dbBbsContext.Tblbookings
+                var booking = await _dbBbsContext.Tblbookings
                     .Include(b => b.Tblbookingseats)
-                    .FirstOrDefault(b => b.BookingId == bookingId);
+                    .FirstOrDefaultAsync(b => b.BookingId == bookingId);
 
                 if (booking == null)
                     return "Booking ID not found";
@@ -356,7 +356,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 }
 
                 _dbBbsContext.Tblbookings.Update(booking);
-                _dbBbsContext.SaveChanges();
+               await _dbBbsContext.SaveChangesAsync();
 
                 return "Booking cancelled successfully";
             }
@@ -376,17 +376,17 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// </summary>
         /// <param name="Bookingid">Booking ID.</param>
         /// <returns>List of downloadable ticket DTOs.</returns>
-        public List<ResponseDownloadtickets> DownloadTickets(int Bookingid)
+        public async Task<List<ResponseDownloadtickets>> DownloadTicketsAsync(int bookingId)
         {
             try
             {
-                var booking = _dbBbsContext.Tblbookings
+                var booking = await _dbBbsContext.Tblbookings
                     .Include(x => x.User)
                     .Include(x => x.Bus)
                     .Include(x => x.Route)
                     .Include(x => x.Tblbookingseats).ThenInclude(x => x.Seat)
-                    .Where(x => x.BookingId == Bookingid)
-                    .ToList();
+                    .Where(x => x.BookingId == bookingId)
+                    .ToListAsync();
 
                 List<ResponseDownloadtickets> responseDownloadtickets = [];
                 foreach (var book in booking)
@@ -402,19 +402,18 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     responseDownloadtickets.Add(downloadbookings);
 
                 }
-
-                if (booking == null)
-                    return null;
+                if (!booking.Any())
+                    return new List<ResponseDownloadtickets>();
 
                 return responseDownloadtickets;
             }
 
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, $"Error downloading ticket for booking: {Bookingid}");
+                _errorHandler.Capture(ex, $"Error downloading ticket for booking: {bookingId}");
                 throw;
             }
-        
+
         }
     }
 }

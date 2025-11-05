@@ -39,7 +39,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// A list of <see cref="ResponseGetbuses"/> representing all buses.
         /// </returns>
 
-        List<ResponseGetbuses> GetAllbuses();
+      Task < List<ResponseGetbuses>>GetAllbuses();
 
         // --------------------------------------------------------------------
         // ✅ ADD BUS
@@ -54,7 +54,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A status message indicating whether the bus was added successfully.
         /// </returns>
-        string AddBuses(RequestAddBuses addBuses);
+        Task<string> AddBuses(RequestAddBuses addBuses);
 
         // --------------------------------------------------------------------
         // ✅ UPDATE BUS
@@ -68,7 +68,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A message indicating the result of the update operation.
         /// </returns>
-        string UpdateBuses (RequestUpdateBuses updateBusesinfo);
+        Task<string> UpdateBuses (RequestUpdateBuses updateBusesinfo);
 
         // --------------------------------------------------------------------
         // ✅ DELETE BUS
@@ -80,7 +80,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// A status message indicating the result of the delete operation.
         /// </returns>
-        string DeleteBuses (int  busesId);
+        Task<string> DeleteBuses (int  busesId);
 
 
         // --------------------------------------------------------------------
@@ -92,6 +92,6 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// <returns>
         /// The total count of buses as an integer.
         /// </returns>
-        int GetBusesCount();
+        Task<int> GetBusesCount();
     }
 }

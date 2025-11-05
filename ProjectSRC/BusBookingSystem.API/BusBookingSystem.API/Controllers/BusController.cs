@@ -50,10 +50,10 @@ namespace BusBookingSystem.API.Controllers
         [HttpGet]
         [Route("GetAllBuses")]
         [AllowAnonymous]
-         
-        public IActionResult GetAllBuses()
+
+        public async Task<IActionResult> GetAllBuses()
         {
-            return Ok(_bBSBus.GetAllbuses());
+            return Ok(await _bBSBus.GetAllbuses());
         }
 
         // --------------------------------------------------------------------
@@ -67,9 +67,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpPost]
         [Route("AddBus")]
         [Authorize]
-        public IActionResult AddBus(RequestAddBuses addBuses)
+        public async Task<IActionResult> AddBus(RequestAddBuses addBuses)
         {
-            return Ok(_bBSBus.AddBuses(addBuses));
+            return Ok(await _bBSBus.AddBuses(addBuses));
         }
 
         // --------------------------------------------------------------------
@@ -84,9 +84,9 @@ namespace BusBookingSystem.API.Controllers
         [Route("UpdateBus")]
         [Authorize]
 
-        public IActionResult UpdateBus(RequestUpdateBuses updateBuses)
+        public async Task<IActionResult> UpdateBus(RequestUpdateBuses updateBuses)
         {
-            return Ok (_bBSBus.UpdateBuses(updateBuses));
+            return Ok (await _bBSBus.UpdateBuses(updateBuses));
         }
 
 
@@ -101,9 +101,9 @@ namespace BusBookingSystem.API.Controllers
         [HttpDelete]
         [Route("DeleteBus")]
         [Authorize]
-        public IActionResult DeleteBus( [FromQuery]int busId)
+        public async Task<IActionResult> DeleteBus( [FromQuery]int busId)
         {
-            return Ok(_bBSBus.DeleteBuses(busId));
+            return Ok(await _bBSBus.DeleteBuses(busId));
         }
 
         // --------------------------------------------------------------------
@@ -115,9 +115,9 @@ namespace BusBookingSystem.API.Controllers
         /// <returns>Total count of buses.</returns>
         [HttpGet]
         [Route("GetBusescount")]
-        public IActionResult GetBusescount()
+        public async Task<IActionResult> GetBusescount()
         {
-            return Ok(_bBSBus.GetBusesCount());
+            return Ok(await _bBSBus.GetBusesCount());
         }
 
 

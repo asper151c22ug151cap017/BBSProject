@@ -67,17 +67,17 @@ namespace EventPlans.API.Controllers
         /// or an unauthorized response if login fails.
         /// </returns>
         [HttpPost("login")]
-        public IActionResult Login([FromBody] RequestloginDto request)
+        public async Task<IActionResult> Login([FromBody] RequestloginDto request)
         {
             try
             {
-                var user = _EmsAuth.Login(request.Email, request.Password);
+                var user = await _EmsAuth.Login(request.Email, request.Password);
 
                 if (user == null)
                     return Unauthorized(new { message = "Invalid Email or password" });
 
                 // JWT settings
-                var jwtSettings = _config.GetSection("Jwt");
+                var jwtSettings =  _config.GetSection("Jwt");
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -96,13 +96,14 @@ namespace EventPlans.API.Controllers
                     signingCredentials: creds
                 );
 
-                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                return await Task.FromResult(Ok(new { token = tokenString }));
             }
 
             catch (Exception ex)
             {
                 _errorHandling.Capture(ex, "An Error while Authorized User");
-                return Unauthorized(new { message = "An error occurred during login.", error = ex.Message });
+                return await Task.FromResult( Unauthorized(new { message = "An error occurred during login.", error = ex.Message }));
             }
         }
 
