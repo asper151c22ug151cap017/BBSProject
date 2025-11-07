@@ -86,8 +86,10 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// <returns>Result message.</returns>
         public async Task<string> AddUsers(RequestAdduser addUser)
         {
+            var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
+               
                 if (addUser == null)
                     return "Invalid input.";
 
@@ -119,11 +121,12 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 newUser.CreatedBy = newUser.UserId;
                 newUser.ModifiedBy = newUser.UserId;
                 await _dbContext.SaveChangesAsync();
-
+                transaction.CommitAsync();
                 return "User added successfully.";
             }
             catch (Exception ex)
             {
+                transaction.RollbackAsync();
                 _errorHandler.Capture(ex, "Error while adding a new user.");
                 throw new Exception("An error occurred while adding a user", ex);
             }
@@ -141,6 +144,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         {
             try
             {
+                var transaction = _dbContext.Database.BeginTransaction();
                 if (updateUserInfo == null || updateUserInfo.UserId <= 0)
                     return "Invalid UserId.";
 
@@ -156,10 +160,13 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 _dbContext.Tblusers.Update(user);
 
                 await _dbContext.SaveChangesAsync();
+                transaction.CommitAsync();
                 return "User updated successfully.";
+
             }
             catch (Exception ex)
             {
+                _dbContext.Database.RollbackTransactionAsync();
                 _errorHandler.Capture(ex, "Error while updating user details.");
                 throw new Exception("An error occurred while updating the user.", ex);
             }
