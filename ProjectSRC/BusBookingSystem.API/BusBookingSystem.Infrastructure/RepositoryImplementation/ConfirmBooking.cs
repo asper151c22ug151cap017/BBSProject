@@ -121,7 +121,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     TotalFare = addbookings.TotalFare,
                     Status = "Confirmed",
                     IsActive = true,
-                    IsDelete = false
+                    IsDelete = false,
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = addbookings.CreatedBy
                 };
 
                 _dbBbsContext.Tblbookings.Add(booking);

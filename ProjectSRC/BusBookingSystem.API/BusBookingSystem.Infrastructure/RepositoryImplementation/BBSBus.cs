@@ -74,19 +74,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     OperatorName = addBuses.OperatorName,
                     OperatorNumber = addBuses.OperatorNumber,
                     CreatedAt = now,
-                    ModifiedAt=now
+                    CreatedBy = addBuses.CreatedBy
                 };
 
                 _dbBbsContext.Tblbuses.Add(NewBuses);
                 await _dbBbsContext.SaveChangesAsync();
-
-                var addcreatedby = await _dbBbsContext.Tblbuses.FirstOrDefaultAsync();
-
-                if (addcreatedby != null)
-                {
-                    addcreatedby.CreatedAt = now;
-                    addcreatedby.CreatedBy = addBuses.UserId;
-                }
 
                
                 return "Added Successfully";
@@ -205,16 +197,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         Buses.Fare = updateBusesinfo.Fare;
                         Buses.OperatorName = updateBusesinfo.OperatorName;
                         Buses.OperatorNumber = updateBusesinfo.OperatorNumber;
+                        Buses.ModifiedAt = DateTime.Now;
+                        Buses.ModifiedBy = updateBusesinfo.ModifiedBy;
+
 
                         await _dbBbsContext.SaveChangesAsync();
-
-                        var modifiedby = await _dbBbsContext.Tblbuses.FirstOrDefaultAsync();
-                        if (modifiedby != null)
-                        {
-                            modifiedby.ModifiedAt = DateTime.Now;
-                            modifiedby.ModifiedBy = updateBusesinfo.UserId;
-                            await _dbBbsContext.SaveChangesAsync();
-                        }
 
                     }
                 }

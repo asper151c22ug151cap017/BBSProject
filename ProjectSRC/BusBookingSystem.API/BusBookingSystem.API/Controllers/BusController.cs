@@ -85,6 +85,10 @@ namespace BusBookingSystem.API.Controllers
         {
             try
             {
+                var result = User.FindFirst("userid")?.Value;
+                if (string.IsNullOrEmpty(result))
+                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                addBuses.CreatedBy = Convert.ToInt16(result);
                 return Ok(await _bBSBus.AddBuses(addBuses));
 
             }
@@ -115,6 +119,10 @@ namespace BusBookingSystem.API.Controllers
         {
             try
             {
+                var result = User.FindFirst("userid")?.Value;
+                if (string.IsNullOrEmpty(result))
+                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                updateBuses.ModifiedBy = Convert.ToInt16(result);
                 return Ok (await _bBSBus.UpdateBuses(updateBuses));
             }
             catch (Exception ex)

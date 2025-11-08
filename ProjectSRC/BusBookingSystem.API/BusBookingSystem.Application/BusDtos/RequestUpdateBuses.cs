@@ -23,6 +23,7 @@ namespace BusBookingSystem.Application.BusDtos
 
         public decimal? Fare { get; set; }
 
-        public int UserId { get; set; }
+
+        public int? ModifiedBy { get; set; }
     }
 }

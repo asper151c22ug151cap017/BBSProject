@@ -114,7 +114,11 @@ namespace BusBookingSystem.API.Controllers
         public async Task<IActionResult> AddBooking(RequestAddbookings addBooking)
         {
             try
-           { 
+           {
+                var result = User.FindFirst("userid")?.Value;
+                if (string.IsNullOrEmpty(result))
+                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                addBooking.CreatedBy = Convert.ToInt16(result);
                 var addbooking = await _bBSbooking.AddBookingAsync(addBooking);
                 return Ok(addbooking);
             }

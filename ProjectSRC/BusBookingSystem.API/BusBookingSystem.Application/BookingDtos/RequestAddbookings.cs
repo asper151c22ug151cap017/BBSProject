@@ -9,7 +9,8 @@ namespace BusBookingSystem.Application.BookingDtos
     public class RequestAddbookings
     {
 
-       
+
+        public int? CreatedBy { get; set; }
 
         public decimal TotalFare { get; set; }
 

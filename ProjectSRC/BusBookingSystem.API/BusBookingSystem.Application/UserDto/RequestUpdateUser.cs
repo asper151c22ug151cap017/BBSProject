@@ -7,4 +7,6 @@
     public int? Age { get; set; }
     public int? GenderId { get; set; }
     public int? RoleId { get; set; }
+
+    public int? ModifiedBy { get; set; }
 }

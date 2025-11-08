@@ -87,6 +87,7 @@ namespace BusBookingSystem.API.Controllers
             try
 
             {
+                
                 addUser.Password = BBSHashCode.HashcodePassword(addUser.Password);
                 return Ok(await _bbsUser.AddUsers(addUser));
             }
@@ -115,6 +116,11 @@ namespace BusBookingSystem.API.Controllers
         {
             try
             {
+                var result = User.FindFirst("userid")?.Value;
+                if (string.IsNullOrEmpty(result))
+                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                updateUserInfo.ModifiedBy = Convert.ToInt16(result);          
+
                 return Ok(await _bbsUser.UpdateUser(updateUserInfo));
             }
             catch (Exception ex)

@@ -107,9 +107,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     Phone = addUser.Phone,
                     Age = addUser.Age,
                     GenderId = addUser.GenderId,
-                    RoleId = 2, // Default role: User
+                    RoleId = addUser.RoleId > 0 ? addUser.RoleId:2, // Default role: User
                     CreatedAt = now,
-                    ModifiedAt = now,
+                  
                     IsActive = true,
                     IsDelete = false
                 };

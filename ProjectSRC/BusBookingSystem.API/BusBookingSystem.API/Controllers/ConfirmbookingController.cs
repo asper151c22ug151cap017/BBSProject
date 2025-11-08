@@ -140,6 +140,10 @@ namespace BusBookingSystem.API.Controllers
         {
             try
             {
+                var result = User.FindFirst("userid")?.Value;
+                if (string.IsNullOrEmpty(result))
+                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                addbookings.CreatedBy = Convert.ToInt16(result);
                 var bookings = await _confirmBooking.AddBookingAsync(addbookings);
                 return Ok(bookings);
             }
@@ -196,6 +200,7 @@ namespace BusBookingSystem.API.Controllers
         {
             try
             {
+
                 var cancel = await _confirmBooking.CancelBookingAsync(bookingId);
                 return Ok(cancel);
             }

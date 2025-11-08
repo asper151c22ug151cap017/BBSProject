@@ -19,6 +19,10 @@ namespace BusBookingSystem.Application.UserDto
         public int Age { get; set; }
 
         public int? GenderId { get; set; }
+     
+
+        public int? CreatedBy { get; set; }
+
 
 
         public int? RoleId { get; set; }

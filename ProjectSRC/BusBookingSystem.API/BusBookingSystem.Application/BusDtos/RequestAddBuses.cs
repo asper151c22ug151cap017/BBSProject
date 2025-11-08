@@ -21,6 +21,9 @@ namespace BusBookingSystem.Application.BusDtos
         public int? TotalSeats { get; set; }
 
         public decimal? Fare { get; set; }
-        public int UserId { get; set; }
+  
+
+        public int? CreatedBy { get; set; }
+
     }
 }
