@@ -74,7 +74,7 @@ namespace EventPlans.API.Controllers
                 var user = await _EmsAuth.Login(request.Email, request.Password);
 
                 if (user == null)
-                    return Unauthorized(new { message = "Invalid Email or password" });
+                    return Unauthorized(new { message = Messages.Auth.Invalid });
 
                 // JWT settings
                 var jwtSettings =  _config.GetSection("Jwt");
@@ -103,7 +103,8 @@ namespace EventPlans.API.Controllers
             catch (Exception ex)
             {
                 _errorHandling.Capture(ex, "An Error while Authorized User");
-                return await Task.FromResult( Unauthorized(new { message = "An error occurred during login.", error = ex.Message }));
+                return StatusCode(StatusCodes.Status500InternalServerError, new APIResponse<object>
+                { Success = false, Message = Messages.Auth.Common, Data = new { error = ex.Message } });
             }
         }
 

@@ -64,10 +64,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error fetching all users");
+                _errorHandler.Capture(ex, Messages.User.exceptiongetuser);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -94,10 +94,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error Adding Userinformation");
+                _errorHandler.Capture(ex, Messages.User.exceptionadd);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -118,7 +118,7 @@ namespace BusBookingSystem.API.Controllers
             {
                 var result = User.FindFirst("userid")?.Value;
                 if (string.IsNullOrEmpty(result))
-                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                    return Unauthorized(new { message = Messages.User.updateusers });
                 updateUserInfo.ModifiedBy = Convert.ToInt16(result);          
 
                 return Ok(await _bbsUser.UpdateUser(updateUserInfo));
@@ -126,10 +126,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error Update Userinformation ");
+                _errorHandler.Capture(ex, Messages.User.exceptionupdate);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -153,10 +153,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error Delete user information ");
+                _errorHandler.Capture(ex, Messages.User.exceptiondelete);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -183,7 +183,7 @@ namespace BusBookingSystem.API.Controllers
                 _errorHandler.Capture(ex, "Error fetching User counts ");
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
 
         }
@@ -208,10 +208,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, $"Error fetching User information by :{userId}");
+                _errorHandler.Capture(ex, Messages.User.exceptiongetuserbyid);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
 
         }
@@ -224,7 +224,7 @@ namespace BusBookingSystem.API.Controllers
             try
             {
                 if (updateUserProfile == null)
-                    return BadRequest("Invalid user data.");
+                    return BadRequest(Messages.User.updatedatas);
 
                 var result = await _bbsUser.UpdateUserprofileAsync(updateUserProfile);
 
@@ -233,10 +233,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error update user profile information by user");
+                _errorHandler.Capture(ex, Messages.User.updateprofile);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
 
         }

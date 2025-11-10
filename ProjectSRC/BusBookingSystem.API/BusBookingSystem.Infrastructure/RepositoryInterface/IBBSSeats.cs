@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusBookingSystem.Application;
 using BusBookingSystem.Application.RoutesDtos;
 using BusBookingSystem.Application.SeatsDtos;
 
@@ -59,7 +60,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// </summary>
         /// <param name="busId">Bus ID.</param>
         /// <returns>List of seats for the given bus.</returns>
-        Task<List<ResponseGetseatsbybusid>> GetparthicularbusSeats(int Busid, DateTime travelDate);
+        Task <List<ResponseGetseatsbybusid>> GetparthicularbusSeats(int Busid, DateTime travelDate);
 
 
         /// <summary>

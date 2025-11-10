@@ -58,10 +58,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error fetching all Routes");
+                _errorHandler.Capture(ex, Messages.RoutesMessage.ExceptiongetRoutes);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -84,10 +84,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error fetching Routes counts ");
+                _errorHandler.Capture(ex, Messages.RoutesMessage.ExceptiongetRoutecount);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -111,10 +111,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error While add routes  ");
+                _errorHandler.Capture(ex,Messages.RoutesMessage.ExceptionaddRoutes);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -138,10 +138,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error While update routes ");
+                _errorHandler.Capture(ex, Messages.RoutesMessage.ExceptionUpdateroutes);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -165,11 +165,11 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error While delete routes");
+                _errorHandler.Capture(ex, Messages.RoutesMessage.Exceptiondeleteroutes);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
-            }
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
+            }   
         }
 
         // --------------------------------------------------------------------
@@ -189,7 +189,7 @@ namespace BusBookingSystem.API.Controllers
             try
             {
                 if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination) || travelDate == default(DateTime))
-                    return BadRequest(new { Message = "Source, Destination, and valid TravelDate are required." });
+                    return BadRequest(new { Message = Messages.RoutesMessage.Required });
 
                 var routes = await _bBSRoutes.FilterRoutes(source, destination, travelDate);
                 return Ok(routes);
@@ -197,10 +197,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error Filtrer and flecth routes ");
+                _errorHandler.Capture(ex, Messages.RoutesMessage.ExceptionFilterroutes);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
     }

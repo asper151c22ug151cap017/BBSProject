@@ -103,6 +103,8 @@ builder.Services.AddTransient<IBBSSeats, BBSseats>();
 builder.Services.AddTransient<IBBSbooking, BBSbooking>();
 builder.Services.AddTransient<Iconfirmbooking, ConfirmBooking>();
 builder.Services.AddTransient<BBSHashCode>();
+builder.Services.AddTransient<Messages>();
+builder.Services.AddTransient(typeof(APIResponse<>));
 builder.Services.AddSingleton<ErrorHandler>(sp =>
 {
     var env = sp.GetRequiredService<IWebHostEnvironment>();

@@ -73,7 +73,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 //NewRoutes.CreatedBy = addRoutes.Busid;
 
 
-                return "Added Successfully";
+                return Messages.BusMessage.Added;
             }
             catch (Exception ex)
             {
@@ -102,7 +102,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     _dbBbsContext.Tblseats.Update(deleteseats);
 
                     await _dbBbsContext.SaveChangesAsync();
-                    return "Deleted Successfully";
+                    return Messages.BusMessage.Delete;
                 }
                 else
                 {
@@ -145,9 +145,9 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         }
 
 
-        // --------------------------------------------------------------------
+        // ----------------------------------------------------------------------
         // ✅ GET AVAILABLE SEATS
-        // --------------------------------------------------------------------
+        // ----------------------------------------------------------------------
         /// <summary>
         /// Retrieves available seats for a given bus and journey date.
         /// </summary>
@@ -295,7 +295,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
 
                     }
                 }
-                return "Updated Successfully ";
+                return Messages.BusMessage.Updated;
 
             }
             catch (Exception ex)

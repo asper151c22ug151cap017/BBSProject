@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusBookingSystem.Application;
 using BusBookingSystem.Application.User;
 using BusBookingSystem.Application.UserDto;
 
@@ -66,7 +67,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryInterface
         /// </summary>
         /// <param name="userId">Unique user ID.</param>
         /// <returns>User details mapped to response DTOs.</returns>
-        Task<List<ResponseuserbyidDto>> GetUserbyId(int Userid);
+        Task<List<ResponseuserbyidDto>> GetUserbyId(int userId);
 
         Task<string> UpdateUserprofileAsync(RequestUserUpdateDto userUpdateDto);
 

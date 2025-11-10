@@ -59,11 +59,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             {
                 var now = DateTime.Now;
                 if (addBuses == null)
-                    return "Invalid Input";
+                    return Messages.User.vaild;
                 var existingBuses = await _dbBbsContext.Tblbuses.Include(x=> x.Tblbookings).ThenInclude(x=> x.User)
                     .AnyAsync(y => y.Busnumber == addBuses.Busnumber && y.OperatorNumber == addBuses.OperatorNumber);
                 if (existingBuses)
-                    throw new Exception("Busnumber or Operatornumber Already Exist");
+                    return Messages.BusMessage.ValidateBusinfo;
                 var NewBuses = new Tblbuse
                 {
                     BusName = addBuses.BusName,
@@ -81,11 +81,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 await _dbBbsContext.SaveChangesAsync();
 
                
-                return "Added Successfully";
+                return Messages.BusMessage.Added;
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "An Error while Add Buses");
+                _errorHandler.Capture(ex,Messages.BusMessage.Exceptionaddbus);
                 throw new Exception(ex.Message);
             }
         }
@@ -110,16 +110,16 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                     _dbBbsContext.Tblbuses.Update(deletebus);
 
                     await _dbBbsContext.SaveChangesAsync();
-                    return "Deleted Successfully";
+                    return Messages.BusMessage.Delete;
                 }
                 else
                 {
-                    return "User Not Found";
+                    return Messages.User.NotFound;
                 }
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "An Error while Add Buses");
+                _errorHandler.Capture(ex, Messages.BusMessage.Exceptiondeletebus);
                 throw new Exception(ex.Message);
             }
         }
@@ -152,7 +152,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "An Error while Get Buses");
+                _errorHandler.Capture(ex, Messages.BusMessage.ExceptionGetbus);
                 throw new Exception(ex.Message);
             }
         }
@@ -205,12 +205,12 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
 
                     }
                 }
-                return "Updated Successfully ";
+                return Messages.BusMessage.Updated;
 
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "An Error while Get Buses");
+                _errorHandler.Capture(ex,Messages.BusMessage.ExceptionUpdatebus);
                 throw new Exception(ex.Message);
 
             }

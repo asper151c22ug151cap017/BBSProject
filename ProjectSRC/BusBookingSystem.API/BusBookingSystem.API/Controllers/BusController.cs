@@ -62,10 +62,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error fetching all buses");
+                _errorHandler.Capture(ex, Messages.BusMessage.ExceptionGetbus);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
 
         }
@@ -87,7 +87,7 @@ namespace BusBookingSystem.API.Controllers
             {
                 var result = User.FindFirst("userid")?.Value;
                 if (string.IsNullOrEmpty(result))
-                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                    return Unauthorized(new { message = Messages.User.Createdby });
                 addBuses.CreatedBy = Convert.ToInt16(result);
                 return Ok(await _bBSBus.AddBuses(addBuses));
 
@@ -95,10 +95,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error while adding Bus ");
+                _errorHandler.Capture(ex,Messages.BusMessage.Exceptionaddbus);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
 
         }
@@ -121,17 +121,17 @@ namespace BusBookingSystem.API.Controllers
             {
                 var result = User.FindFirst("userid")?.Value;
                 if (string.IsNullOrEmpty(result))
-                    return Unauthorized(new { message = "Invalid or missing user identity" });
+                    return Unauthorized(new { message = Messages.User.Createdby });
                 updateBuses.ModifiedBy = Convert.ToInt16(result);
                 return Ok (await _bBSBus.UpdateBuses(updateBuses));
             }
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error While update bus informations");
+                _errorHandler.Capture(ex,Messages.BusMessage.ExceptionUpdatebus);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
 
         }
@@ -158,10 +158,10 @@ namespace BusBookingSystem.API.Controllers
             catch (Exception ex)
             {
                 // You can log the error
-                _errorHandler.Capture(ex, "Error While Delete bus ");
+                _errorHandler.Capture(ex, Messages.BusMessage.Exceptiondeletebus);
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
         }
 
@@ -188,7 +188,7 @@ namespace BusBookingSystem.API.Controllers
                 _errorHandler.Capture(ex, "Error fetching buses counts ");
 
                 // Return proper response
-                return StatusCode(500, new { message = "Something went wrong", error = ex.Message });
+                return StatusCode(500, new { message = Messages.User.Controller, error = ex.Message });
             }
 
         }

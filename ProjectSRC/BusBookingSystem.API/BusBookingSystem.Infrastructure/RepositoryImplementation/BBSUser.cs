@@ -56,7 +56,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         {
             try
             {
-                return await _dbContext.Tblusers.AsNoTracking()
+                var getuser = await _dbContext.Tblusers.AsNoTracking()
                     .Select(x => new ResponseGetusersDto
                     {
                         UserId = x.UserId,
@@ -68,10 +68,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                         IsActive = x.IsActive,
                         RoleId = x.RoleId
                     }).ToListAsync();
+                return getuser;
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "Error while fetching user list.");
+                _errorHandler.Capture(ex, Messages.User.exceptiongetuser);
                 throw new Exception("An error occurred while retrieving users.", ex);
             }
         }
@@ -91,11 +92,11 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             {
                
                 if (addUser == null)
-                    return "Invalid input.";
+                    return Messages.User.nullable;
 
                 bool existingUser = await _dbContext.Tblusers.AnyAsync(e => e.Email == addUser.Email);
                 if (existingUser)
-                    throw new Exception("Email already exists.");
+                    return Messages.User.Existingemail;
 
                 var now = DateTime.Now;
 
@@ -121,14 +122,14 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 newUser.CreatedBy = newUser.UserId;
                 newUser.ModifiedBy = newUser.UserId;
                 await _dbContext.SaveChangesAsync();
-                transaction.CommitAsync();
-                return "User added successfully.";
+                await transaction.CommitAsync();
+                return Messages.User.Registeruser;
             }
             catch (Exception ex)
             {
-                transaction.RollbackAsync();
-                _errorHandler.Capture(ex, "Error while adding a new user.");
-                throw new Exception("An error occurred while adding a user", ex);
+              await  transaction.RollbackAsync();
+                _errorHandler.Capture(ex, Messages.User.exceptionadd);
+                return Messages.User.Failed;
             }
         }
 
@@ -142,17 +143,18 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
         /// <returns>Result message.</returns>
         public async Task<string> UpdateUser(RequestUpdateUser updateUserInfo)
         {
+            var transaction =await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var transaction = _dbContext.Database.BeginTransaction();
+                
                 if (updateUserInfo == null || updateUserInfo.UserId <= 0)
-                    return "Invalid UserId.";
+                    return Messages.User.checkuserid;
 
                 var user = await _dbContext.Tblusers.FirstOrDefaultAsync(x => x.UserId == updateUserInfo.UserId);
                 if (user == null)
 
                 {
-                    return $"user not founded";
+                    return Messages.User.NotFound;
                 }
 
                 _mapper.Map(updateUserInfo, user);
@@ -160,15 +162,15 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 _dbContext.Tblusers.Update(user);
 
                 await _dbContext.SaveChangesAsync();
-                transaction.CommitAsync();
-                return "User updated successfully.";
+               await transaction.CommitAsync();
+                return Messages.User.update;
 
             }
             catch (Exception ex)
             {
-                _dbContext.Database.RollbackTransactionAsync();
-                _errorHandler.Capture(ex, "Error while updating user details.");
-                throw new Exception("An error occurred while updating the user.", ex);
+                await transaction.RollbackAsync();
+                _errorHandler.Capture(ex,Messages.User.exceptionupdate);
+                return Messages.User.faildupdate;
             }
         }
 
@@ -187,7 +189,7 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             {
                 var user = await _dbContext.Tblusers.FirstOrDefaultAsync(u => u.UserId == userId);
                 if (user == null)
-                    return "User not found.";
+                    return Messages.User.checkuserid;
 
                 user.IsActive = false;
                 user.IsDelete = true;
@@ -197,12 +199,12 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
                 _dbContext.Tblusers.Update(user);
                 await _dbContext.SaveChangesAsync();
 
-                return "User deleted successfully.";
+                return Messages.User.Deleted;
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "Error while deleting user.");
-                throw new Exception("An error occurred while deleting the user.", ex);
+                _errorHandler.Capture(ex, Messages.User.exceptiondelete);
+               return Messages.User.FailedDelete;
             }
         }
 
@@ -245,8 +247,8 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "Error while fetching user by ID.");
-                throw new Exception("An error occurred while retrieving user details.", ex);
+                _errorHandler.Capture(ex, Messages.User.exceptiongetuserbyid);
+                throw new Exception("An error occurred while retrieving user details");
             }
         }
 
@@ -255,13 +257,13 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
             try
             {
                 if (userUpdateDto == null || userUpdateDto.UserId <= 0)
-                    return "Invalid user data.";
+                    return Messages.User.nullable;
 
                 var user = await _dbContext.Tblusers
                     .FirstOrDefaultAsync(x => x.UserId == userUpdateDto.UserId);
 
                 if (user == null)
-                    return "User not found.";
+                    return Messages.User.checkuserid;
 
                 // ✅ Update fields
                 user.Name = userUpdateDto.Name;
@@ -272,12 +274,13 @@ namespace BusBookingSystem.Infrastructure.RepositoryImplementation
 
                 await _dbContext.SaveChangesAsync();
 
-                return "User profile updated successfully.";
+                return Messages.User.update;
             }
             catch (Exception ex)
             {
-                _errorHandler.Capture(ex, "Error while updating user profile.");
-                throw new Exception("An unexpected error occurred while updating the user profile.", ex);
+                _errorHandler.Capture(ex, Messages.User.exceptionupdate);
+                
+                return Messages.User.faildupdate;    
             }
         }
     }
